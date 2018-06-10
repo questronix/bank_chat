@@ -2,7 +2,7 @@
   "name": "bank_chat",
   "version": "0.0.1",
   "description": "Bank Chatbot",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "start": "npm run build:dev & node server.js",
     "build:dev": "webpack --config webpack/webpack.config.dev.js"
