@@ -3,66 +3,65 @@
 <div class='wrapper'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<div class='nav'>
-		  <span class="fa fa-arrow-left"></span>
-		  <p> ChatBot </p>
-		  <span id='menu' class="fa fa-window-maximize modal-trigger"></span>
-		  </div>
-	<div class='container'>
-	  
-	  </div>
+        <span class="fa fa-arrow-left"></span>
+		<p> ChatBot </p>
+		<span id='modalButton' class="fa fa-window-maximize modal-trigger" v-on:click="userInput" ></span>
+	</div>
 
-	  <div class="messages">
-	  	<div class="left-chat">
-            <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+	<div class="messages">
+
+        <div class="left-chat">
+            <img class="avatar" src="https://files.fm/thumb_show.php?i=9chmkuaq&view">
             <div class="chat-bg">
                 <p>Hi there! </p>
             </div>
         </div>
-        
 
-        
         <div class="message" v-for="message in messages">
-        	<div class="right-chat" v-if="message.sender === 'user'">
-                    <div class="chat-bg">
-                        <p>{{ message.text }}</p>
-                    </div>
+
+            <div class="right-chat" v-if="message.sender === 'user'">
+                <div class="chat-bg">
+                    <p>{{ message.text }}</p>
                 </div>
+                <img class="avatar" src="https://files.fm/thumb_show.php?i=nv26hu44&view">
+            </div>
+
             <div class="left-chat" v-if="message.sender === 'robot'">
-                    <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+                <img class="avatar" src="https://files.fm/thumb_show.php?i=9chmkuaq&view">
                     <div class="chat-bg">
                         <p>{{ message.text }}</p>
                     </div>
                 </div>
             </div>
 
-        
-
-           </div>
-                <br>
-          <div class="chat-suggestions custom-scroll">
-                <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
-                    Find Nearest Branch
-                </a>
-                <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
-                    Find Nearest ATM
-                </a>
-                <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
-                    Store Hours
-                </a>
-                <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
-                    Credit Card Information
-                </a>
-            </div>
-
-         <div class="chat-input" style="justify-content:space-around; align-items:center;">
-                <div style="width:100%">
-                    <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
-                </div>
-                <div style="margin:0px 20px;">
-                    <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
-                </div>
-            </div>
     </div>
+                <br>
+
+    <div class="chat-suggestions custom-scroll">
+        <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
+            Find Nearest Branch
+        </a>
+        <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
+            Find Nearest ATM
+        </a>
+        <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
+            Store Hours
+        </a>
+        <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+            Credit Card Information
+        </a>
+    </div>
+
+    <div class="chat-input" style="justify-content:space-around; align-items:center;">
+        <div style="width:100%">
+            <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
+        </div>
+        <div style="margin:0px 20px;">
+            <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+        </div>
+    </div>
+</div>
+
 </template>
 
 
@@ -94,7 +93,7 @@ export default {
 		checkIntent(message){
 			if(this.message.match('hi'))
 				this.chat('robot', "What can I do for you?");
-            if(this.message.match('Find Nearest Branch'))
+            else if(this.message.match('Find Nearest Branch'))
                 this.chat('robot', "Locating");
             else this.chat('robot', "Sorry, I did not understand that.");
 		},
@@ -154,8 +153,6 @@ export default {
  		width: 700px;
  	}
 
-
-
     ul {
         list-style-type: none;
 	    margin: 0;
@@ -207,17 +204,15 @@ export default {
 
   	}
 
-  	
-
     .wrapper .messages  .left-chat .avatar {
-        width: 35px;
-        height: 35px;
+        width: 50px;
+        height: 50px;
         border-radius:60%;
         float: left; }
 
     .wrapper .messages  .left-chat .avatar:hover {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         border-radius:60%;
         float: left; 
     	box-shadow: 10px 10px 5px grey;}
@@ -227,7 +222,7 @@ export default {
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
-        border-radius: 15px 50px 30px 5px;
+        border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; }
 
@@ -236,7 +231,7 @@ export default {
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
-        border-radius: 15px 50px 30px 5px;
+        border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; 
     	box-shadow: 0 3px green;}
@@ -250,14 +245,14 @@ export default {
   	}
 
     .wrapper .messages .message .left-chat .avatar {
-        width: 35px;
-        height: 35px;
+        width: 50px;
+        height: 50px;
         border-radius:60%;
         float: left; }
 
     .wrapper .messages .message .left-chat .avatar:hover {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         border-radius:60%;
         float: left; 
     	box-shadow: 10px 10px 5px grey;}
@@ -267,7 +262,7 @@ export default {
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
-        border-radius: 15px 50px 30px 5px;
+        border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; }
 
@@ -292,8 +287,8 @@ export default {
 		justify-content: flex-end; }
 
   .wrapper .messages .message .right-chat .avatar {
-	    width: 35px;
-	    height: 35px;
+	    width: 50px;
+	    height: 50px;
 	    border-radius: 50%;
 	    margin-top: 5px;
 	    float: right; }
@@ -365,6 +360,7 @@ export default {
             color: white; }
 
     #sendButton:hover{color:green;}
+    #modalButton:hover{color:green;}
 
      /**custom scroll**/
 	.custom-scroll::-webkit-scrollbar-track {
