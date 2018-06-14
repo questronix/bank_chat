@@ -25,6 +25,7 @@ app.use('/static', express.static(path.join(__dirname, 'dist/public/')));
 
 let home = require('./home');
 let login = require('./login');
+let chat = require('./chat');
 
 //declare session middleware
 app.use(session({
@@ -35,5 +36,6 @@ app.use(session({
 
 app.use('/', home);
 app.use('/login', login);
+app.use('/chat', chat);
 
 module.exports = app;
