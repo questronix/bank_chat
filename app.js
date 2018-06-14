@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use('/static', express.static(path.join(__dirname, 'dist/public/')));
 
 let home = require('./home');
+let login = require('./login');
 
 //declare session middleware
 app.use(session({
@@ -33,5 +34,6 @@ app.use(session({
 }));
 
 app.use('/', home);
+app.use('/login', login);
 
 module.exports = app;
