@@ -91,11 +91,15 @@ export default {
 		},
 
 		checkIntent(message){
+<<<<<<< Updated upstream
 			if(this.message.match('hi'))
 				this.chat('robot', "What can I do for you?");
             else if(this.message.match('Find Nearest Branch'))
                 this.chat('robot', "Locating");
             else this.chat('robot', "Sorry, I did not understand that.");
+=======
+            this.chat('robot', message);
+>>>>>>> Stashed changes
 		},
 
         nearestBranch() {
