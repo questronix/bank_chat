@@ -37,7 +37,7 @@
 
             <div id="map">
                 <p>Your position:</p>
-                <p>Lat : {{ latitude }} Long : {{ longitude }}</p>
+                <p>Lat : {{ position.latitude }} Long : {{ position.longitude }}</p>
             </div>
                 
     </div>
@@ -131,7 +131,7 @@ export default {
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.chat('user', this.message),
-            this.checkIntent(this.message)
+            //this.checkIntent(this.message)
             this.message= null
             this.geo_location();
 
@@ -162,10 +162,13 @@ export default {
         },
         geo_location() {
             if(navigator.geolocation) {
+                var self = this;
+                var latitude, longitude;
                navigator.geolocation.getCurrentPosition(function(position){
-                this.position = position.coords;
+                self.position = position.coords;
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
+                console.log(latitude,longitude);
               })
             }
           },
