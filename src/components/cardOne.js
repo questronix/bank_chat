@@ -1,9 +1,9 @@
 import Vue from 'vue/dist/vue';
 
-let nearBranch = Vue.component('nearest-branch', {
+let cardOne = Vue.component('msgOptions', {
   data: () => {
     return {
-      count: 0
+     
     };
   },
   template: 
@@ -13,7 +13,7 @@ let nearBranch = Vue.component('nearest-branch', {
             <div class="chat-card">
                 <div class="card-content">
                     <h4 class="card-title">
-                        This is a card title
+                        
                     </h4>
                     <p class="card-text">
                         This is a card text sample, and i should make this very very looong, just like long long man.
@@ -32,4 +32,4 @@ let nearBranch = Vue.component('nearest-branch', {
         </div>`
 });
 
-export default nearBranch;
+export default cardOne;

@@ -9,7 +9,7 @@
 	</div>
    
 	<div class="messages custom-scroll" >
-         <nearest-branch></nearest-branch>
+         <msgOptions></msgOptions>
 
         <div class="left-chat">
             <img class="avatar" src="https://files.fm/thumb_show.php?i=9chmkuaq&view">
@@ -77,7 +77,7 @@
 
 <script>
 import Api from '../../lib/Api';
-import nearBranch from '../../components/nearBranch';
+import cardOne from '../../components/cardOne';
 
 let context = undefined;
 export default {
