@@ -82,6 +82,7 @@ export default {
 		chatBot: 'ChatBot',
 		user: 'You',
 		messages: [],
+        position:'',
         latitude: '',
         longitude: '',
 	}
@@ -123,7 +124,7 @@ export default {
    //          else this.chat('robot', "Sorry, I did not understand that.");
             this.chat('robot', message);
 
-            this.geo_location();
+            
 
 		},
 
@@ -132,6 +133,7 @@ export default {
             this.chat('user', this.message),
             this.checkIntent(this.message)
             this.message= null
+            this.geo_location();
 
         },
 
@@ -160,10 +162,8 @@ export default {
         },
         geo_location() {
             if(navigator.geolocation) {
-               var self = this;
-               var map, latitude, longitude;
                navigator.geolocation.getCurrentPosition(function(position){
-                self.position = position.coords;
+                this.position = position.coords;
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
               })
