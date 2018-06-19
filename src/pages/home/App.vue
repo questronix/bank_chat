@@ -1,17 +1,15 @@
 <template>
 <div class='wrapper'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<<<<<<< HEAD
-    
-=======
->>>>>>> 324a3cbf6ee7d2ca77b7a53a49ea381e9ce815dd
+
 	<div class='nav'>
         <span class="fa fa-arrow-left"></span>
 		<p> ChatBot </p>
 		<span id='modalButton' class="fa fa-window-maximize modal-trigger" v-on:click="userInput" ></span>
 	</div>
-
-	<div class="messages custom" >
+   
+	<div class="messages custom-scroll" >
+         <nearest-branch></nearest-branch>
 
         <div class="left-chat">
             <img class="avatar" src="https://files.fm/thumb_show.php?i=9chmkuaq&view">
@@ -38,10 +36,7 @@
                 </div>            
             </div>
 
-            <div id="map"></div>
-
-                </div>
-            </div>
+            
 
     </div>
                 <br>
@@ -55,6 +50,12 @@
         </a>
         <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
             Store Hours
+        </a>
+        <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+            Credit Card Information
+        </a>
+        <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+            Credit Card Information
         </a>
         <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
             Credit Card Information
@@ -76,18 +77,22 @@
 
 <script>
 import Api from '../../lib/Api';
-
+import nearBranch from '../../components/nearBranch';
 
 let context = undefined;
 export default {
+  
 	data(){
 	return {
 		chatBot: 'ChatBot',
 		user: 'You',
 		messages: [],
+        message: '',
+
 	}
 
 },
+    
 	methods: {
 		userInput() {
 
@@ -100,8 +105,10 @@ export default {
             }).then(data=>{
               console.log(data);
                 context = data.body.context
+                
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
+
 
             }).catch(error=>{
               console.log(error);
@@ -127,6 +134,8 @@ export default {
             this.geo_location();
 
 		},
+
+       
 
         nearestBranch() {
             this.message="Find Nearest Branch"
@@ -160,21 +169,23 @@ export default {
 
         },
 
-
+        
        
         geo_location() {
             if(navigator.geolocation) {
                var self = this;
-               var map, lat, long;
+               var map, latitude, longitude;
                navigator.geolocation.getCurrentPosition(function(position){
                 self.position = position.coords;
-                lat = position.coords.latitude;
-                long = position.coords.longitude;
-                
+                console.log(position.latitude, position.longitude);
+                this.myMap();
+               
                 
               })
             }
           },
+
+
 
        
         

@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue';
 import App from './App.vue'
 import button from '../../components/button';
 import Api from '../../lib/Api';
-
+import nearBranch from '../../components/nearBranch';
 
 
 Api.post('login', {

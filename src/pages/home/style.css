@@ -40,7 +40,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 
 
     .wrapper .messages {
-    height: -webkit-fill-available;
+    height: 720px;
     width: 100%;
     background-color: white;
     overflow: auto; 
@@ -53,7 +53,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 
 	    flex-direction: column; }
 	.wrapper .messages .message{
-	    height: 100%;
+	    height: 20%;
 	    width: 100%;
 	    background-color: white;
 	    overflow: auto;
@@ -65,7 +65,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         margin: 10px;
         display: flex;
         justify-content: flex-start; 
-        border-radius: 15px 30px 30px 5px;
+        border-radius: 20px;
 
 
   	}
@@ -90,7 +90,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         padding: 15px;
         margin-left: 10px;
         word-break: break-all; 
-        border-radius: 15px 30px 30px 5px;}
+        border-radius: 20px;}
 
          .wrapper .messages  .left-chat .chat-bg:hover {
         max-width: 70%;
@@ -107,7 +107,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         margin: 10px;
         display: flex;
         justify-content: flex-start; 
-        border-radius: 15px 30px 30px 5px;
+        border-radius: 20px;
 
   	}
 
@@ -129,7 +129,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
-        border-radius: 15px 30px 30px 5px;
+        border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; }
 
@@ -165,7 +165,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 	    min-width: auto;
 	    background-color: #f1f1f1;
 	    padding: 15px;
-	    border-radius: 30px 15px 5px 30px;
+	    border-radius: 20px;
 	    margin-right: 10px;
 	    background-color: #d566ab;
 	    color: white;
