@@ -31,31 +31,21 @@
                     <div class="chat-bg">
                         <p>{{ message.text }}</p>
                     </div>
-
                 </div>            
             </div>
-
-            <div id="map">
-                <p>Your position:</p>
-                <p>Lat : {{ position.latitude }} Long : {{ position.longitude }}</p>
-            </div>
-                
+            <!-- <div id="map"></div>    -->
     </div>
                 <br>
 
     <div class="chat-suggestions custom-scroll">
         <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
-            Find Nearest Branch
-        </a>
+            Find Nearest Branch</a>
         <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
-            Find Nearest ATM
-        </a>
+            Find Nearest ATM</a>
         <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
-            Store Hours
-        </a>
+            Store Hours</a>
         <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
-            Credit Card Information
-        </a>
+            Credit Card Information</a>
     </div>
 
     <div class="chat-input" style="justify-content:space-around; align-items:center;">
@@ -66,14 +56,15 @@
             <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
         </div>
     </div>
+    <!-- <div id="test">
+        <p>Lat : {{ position.latitude }} Long : {{ position.longitude }}</p>
+    </div> -->
 </div>
-
 </template>
-
 
 <script>
 import Api from '../../lib/Api';
-
+// import button from '../../components/button';
 
 let context = undefined;
 export default {
@@ -86,11 +77,9 @@ export default {
         latitude: '',
         longitude: '',
 	}
-
 },
-	methods: {
+    methods: {
 		userInput() {
-
             this.chat('user', this.message);
             Api.post('chat', {
                 context: context || {},
@@ -123,15 +112,12 @@ export default {
    //              this.chat('robot', "Locating");
    //          else this.chat('robot', "Sorry, I did not understand that.");
             this.chat('robot', message);
-
-            
-
 		},
 
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.chat('user', this.message),
-            //this.checkIntent(this.message)
+            
             this.message= null
             this.geo_location();
 
@@ -160,32 +146,23 @@ export default {
             this.message= null
 
         },
+
         geo_location() {
+            var self = this;
+            var latitude, longitude;
             if(navigator.geolocation) {
-                var self = this;
-                var latitude, longitude;
                navigator.geolocation.getCurrentPosition(function(position){
                 self.position = position.coords;
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
                 console.log(latitude,longitude);
+
               })
             }
-          },
-
-       
-        
-
-
+          
+        },
 	}
 }
 </script>
 
-
-
- <style>
- 	
- @import 'style.css';
-	
-    </style>
-
+<style>@import 'style.css';</style>
