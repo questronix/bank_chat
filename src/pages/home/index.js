@@ -3,6 +3,7 @@ import App from './App.vue'
 import button from '../../components/button';
 import Api from '../../lib/Api';
 import cardOne from '../../components/cardOne';
+import imgCard from '../../components/imgCard';
 
 
 Api.post('login', {

@@ -8,12 +8,12 @@ let cardOne = Vue.component('msgOptions', {
   },
   template: 
   `<div class="left-chat">
-        <img class="avatar" src="https://files.fm/thumb_show.php?i=9chmkuaq&view">
+        <img class="avatar"  src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
         <div class="nearest-branch custom-scroll">
             <div class="chat-card">
                 <div class="card-content">
                     <h4 class="card-title">
-                        
+                        {{ }}
                     </h4>
                     <p class="card-text">
                         This is a card text sample, and i should make this very very looong, just like long long man.
