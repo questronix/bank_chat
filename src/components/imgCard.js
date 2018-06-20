@@ -3,7 +3,7 @@ import Vue from 'vue/dist/vue';
 let imgCard = Vue.component('imgCard', {
   data: () => {
     return {
-      count: 0
+  
     };
   },
   template: 
