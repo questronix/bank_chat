@@ -3,6 +3,7 @@
 <div class="wrapper chat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+      
             <div id="modal" class="animated modal">
                 <div class="modal-content animated">
                     <span class="modal-close fa fa-times"></span>
@@ -44,15 +45,15 @@
                 </div>
    
             <div class="chat-suggestions custom-scroll">
-                <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
-                    Find Nearest Branch</a>
-                <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
-                    Find Nearest ATM</a>
-                <a class="chat-suggestions-items" id="bank-hours" v-on:click="storeHours">
-                    Bank Hours</a>
-                <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
-                    Credit Card Information</a>
-            </div>
+            <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
+                Find Nearest Branch</a>
+            <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
+                Find Nearest ATM</a>
+            <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
+                Store Hours</a>
+            <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+                Credit Card Information</a>
+        </div>
 
         <div class="chat-input" style="justify-content:space-around; align-items:center;">
             <div style="width:100%">
@@ -75,13 +76,16 @@ let context = undefined;
 export default {
   
     data(){
-        return {
-            chatBot: 'ChatBot',
-            user: 'You',
-            messages: [],
-            message: '',
-        }
-    },
+    return {
+        chatBot: 'ChatBot',
+        user: 'You',
+        messages: [],
+        message: '',
+
+    }
+
+},
+    
     methods: {
         userInput() {
             this.chat('user', this.message);
@@ -93,8 +97,11 @@ export default {
             }).then(data=>{
               console.log(data);
                 context = data.body.context
+                
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
+
+
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -109,94 +116,57 @@ export default {
         },
 
         checkIntent(message){
+            // if(this.message.match('hi'))
+            //  this.chat('robot', "What can I do for you?");
+   //          else if(this.message.match('Find Nearest Branch'))
+   //              this.chat('robot', "Locating");
+   //          else this.chat('robot', "Sorry, I did not understand that.");
             this.chat('robot', message);
+
+            this.geo_location();
+
         },
+
+       
 
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
             
+            this.message= null
+            this.geo_location();
+
         },
 
         nearestAtm() {
             this.message="Find Nearest ATM"
             this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.checkIntent(this.message)
+            this.message= null
 
         },
 
         storeHours() {
-            this.message="Bank Hours"
+            this.message="Store Hours"
             this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.checkIntent(this.message)
+            this.message= null
 
         },
 
         cardInfo() {
             this.message="Credit Card Information"
             this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.checkIntent(this.message)
+            this.message= null
 
         },
 
-        geoLocation() {
+
+        
+
+
+        geo_location() {
             var self = this;
             var latitude, longitude;
             if(navigator.geolocation) {
@@ -208,26 +178,9 @@ export default {
 
               })
             }
+          
         },
-    },
-    mounted: function () {          //called after whole page has loaded
-        this.$nextTick(function () {
-            console.log('test');
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text:""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.message= null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message= null;
-            });
-        })
+
     }
 }
 </script>
@@ -236,7 +189,10 @@ export default {
 
 
  <style>
+ 
  @import '../css/style.css';
  @import '../css/style.scss';
-</style>
+
+    
+    </style>
 
