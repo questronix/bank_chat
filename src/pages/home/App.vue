@@ -23,11 +23,9 @@
                 <span class="fa fa-arrow-left"></span>
                 <p>Val</p>
                 <span class="fa fa-window-maximize modal-trigger"></span>
-            </div>
-
+             </div>
             <div class="messages custom-scroll" >
 
-                
                 <div class="message" v-for="message in messages">
 
             <div class="right-chat" v-if="message.sender === 'user'">
@@ -42,49 +40,32 @@
                     <div class="chat-bg">
                         <p>{{ message.text }}</p>
                     </div>
-
                 </div>            
             </div> 
                 </div>
-          
-
+   
             <div class="chat-suggestions custom-scroll">
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-                <a class="chat-suggestions-items">
-                    Sample
-                </a>
-            </div>
-            <div class="chat-input" style="justify-content:space-around; align-items:center;">
-                <div style="width:100%">
-                    <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
-                </div>
-                <div style="margin:0px 20px;">
-                    <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+            <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
+                Find Nearest Branch</a>
+            <a class="chat-suggestions-items" id="nearest-atm" v-on:click="nearestAtm">
+                Find Nearest ATM</a>
+            <a class="chat-suggestions-items" id="store-hours" v-on:click="storeHours">
+                Store Hours</a>
+            <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+                Credit Card Information</a>
         </div>
-    </div>
-       
-         </div>
-    
+
+        <div class="chat-input" style="justify-content:space-around; align-items:center;">
+            <div style="width:100%">
+                <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
+            </div>
+            <div style="margin:0px 20px;">
+                <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+            </div>
+        </div>
+    </div>            
 
 </template>
-
 
 <script>
 import Api from '../../lib/Api';
@@ -94,20 +75,19 @@ import imgCard from '../../components/imgCard';
 let context = undefined;
 export default {
   
-	data(){
-	return {
-		chatBot: 'ChatBot',
-		user: 'You',
-		messages: [],
+    data(){
+    return {
+        chatBot: 'ChatBot',
+        user: 'You',
+        messages: [],
         message: '',
 
-	}
+    }
 
 },
     
-	methods: {
-		userInput() {
-
+    methods: {
+        userInput() {
             this.chat('user', this.message);
             Api.post('chat', {
                 context: context || {},
@@ -126,18 +106,18 @@ export default {
               console.log(error);
                 this.message= null;
             });
-		},
+        },
 
-		chat(sender, message){
-			this.messages.push({
-				'sender' : sender,
-				'text' : message
-			})
-		},
+        chat(sender, message){
+            this.messages.push({
+                'sender' : sender,
+                'text' : message
+            })
+        },
 
-		checkIntent(message){
-			// if(this.message.match('hi'))
-			// 	this.chat('robot', "What can I do for you?");
+        checkIntent(message){
+            // if(this.message.match('hi'))
+            //  this.chat('robot', "What can I do for you?");
    //          else if(this.message.match('Find Nearest Branch'))
    //              this.chat('robot', "Locating");
    //          else this.chat('robot', "Sorry, I did not understand that.");
@@ -145,15 +125,16 @@ export default {
 
             this.geo_location();
 
-		},
+        },
 
        
 
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.chat('user', this.message),
-            this.checkIntent(this.message)
+            
             this.message= null
+            this.geo_location();
 
         },
 
@@ -181,31 +162,29 @@ export default {
 
         },
 
+
         
-       
+
+
         geo_location() {
+            var self = this;
+            var latitude, longitude;
             if(navigator.geolocation) {
-               var self = this;
-               var map, latitude, longitude;
                navigator.geolocation.getCurrentPosition(function(position){
                 self.position = position.coords;
-                console.log(position.latitude, position.longitude);
-                this.myMap();
-               
-                
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                console.log(latitude,longitude);
+
               })
             }
-          },
+          
+        },
 
-
-
-       
-        
-
-
-	}
+    }
 }
 </script>
+
 
 
 
@@ -214,6 +193,6 @@ export default {
  @import '../css/style.css';
  @import '../css/style.scss';
 
-	
+    
     </style>
 
