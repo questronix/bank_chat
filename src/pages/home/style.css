@@ -1,4 +1,5 @@
 no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr {
+
  		 padding: 0; }
 
 	.no-margin, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr {
@@ -39,6 +40,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 	}
 
 
+
     .wrapper .messages {
     height: -webkit-fill-available;
     width: 100%;
@@ -47,6 +49,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
     }
 
     .wrapper .container {
+
 	    height: 100%;
 	    display: flex;
 	    justify-content: space-between;
@@ -67,8 +70,8 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         justify-content: flex-start; 
         border-radius: 20px;
 
-
   	}
+
 
     .wrapper .messages  .left-chat .avatar {
         width: 50px;
@@ -81,7 +84,9 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         height: 60px;
         border-radius:60%;
         float: left; 
+
     	box-shadow: 10px 10px 5px grey;}
+
 
     .wrapper .messages  .left-chat .chat-bg, .wrapper .messages  .left-chat .nearest-branch .chat-card, .wrapper .nearest-branch .chat-card {
         max-width: 70%;
@@ -101,6 +106,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         margin-left: 10px;
         word-break: break-all; 
     	box-shadow: 0 3px green;}
+
 
     .wrapper .messages .message .left-chat {
         min-width: auto;
@@ -122,7 +128,9 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         height: 60px;
         border-radius:60%;
         float: left; 
+
     	box-shadow: 10px 10px 5px grey;}
+
 
     .wrapper .messages .message .left-chat .chat-bg, .wrapper .messages .message .left-chat .nearest-branch .chat-card, .wrapper .nearest-branch .chat-card {
         max-width: 70%;
@@ -132,7 +140,6 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
         border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; }
-
     .wrapper .chat-input {
 		border-top: 1px #bdbdbd solid;
 		height: 50px;
@@ -201,6 +208,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 	      padding: 0 !important;
 	      width: 400px !important;
 	      flex: 0 0 auto; }
+
     .wrapper .nearest-branch .chat-card .card-content {
         padding: 10px; }
         
@@ -220,7 +228,9 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
           transition: .3s ease-in-out; }
     
     .wrapper .nearest-branch .chat-card .card-btn-bundle .card-btn:nth-last-child(1) {
+
         border-radius: 20px; }
+
     
     .wrapper .nearest-branch .chat-card .card-btn-bundle .card-btn:hover {
             background-color: #6cc27b;
@@ -251,6 +261,7 @@ no-padding, body, h1, h2, h3, h4, h5, p, a, i, .misc-text, input[type=text], hr 
 	    width: 100%;
 	    -webkit-overflow-scrolling: touch;
 	    padding-bottom: 10px; }
+
     .wrapper .chat-suggestions .chat-suggestions-items {
       display: inline-block;
       margin: 5px;
