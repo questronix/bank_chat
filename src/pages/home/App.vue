@@ -50,7 +50,7 @@
                 <div class="imgCard">
                     <div class="chat-card">
                         <div class="card-content">
-                            <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=500x500&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                            <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
                         </div>
                     </div>
                    </div>
