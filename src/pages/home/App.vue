@@ -23,9 +23,13 @@
                 <p>Val</p>
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
+
+            
+
             <div class="messages custom-scroll" >
 
                 <div class="message" v-for="message in messages">
+
 
             <div class="right-chat" v-if="message.sender === 'user'">
                 <div class="chat-bg">
@@ -39,7 +43,18 @@
                     <div class="chat-bg">
                         <p>{{ message.text }}</p>
                     </div>
-                </div>            
+                </div> 
+           
+            <div class="left-chat" v-if="message.text === 'Please wait while we locate nearest store based on your address.'">
+                <img class="avatar"  src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+                <div class="imgCard">
+                    <div class="chat-card">
+                        <div class="card-content">
+                            <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                        </div>
+                    </div>
+                   </div>
+                </div>      
             </div> 
                 </div>
    
@@ -70,18 +85,26 @@
 import Api from '../../lib/Api';
 import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
-
+            
+let longitude, latitude = 0;
 let context = undefined;
 export default {
-  
+    name: 'google-map',
+    props: ['name'],
     data(){
-        return {
-            chatBot: 'ChatBot',
-            user: 'You',
-            messages: [],
-            message: '',
-        }
-    },
+    return {
+        chatBot: 'ChatBot',
+        user: 'You',
+        messages: [],
+        message: '',
+        nearestBranches: [],
+        branchCoordinates: {},
+        
+
+    }
+
+},
+
     methods: {
         userInput() {
             this.chat('user', this.message);
@@ -92,13 +115,32 @@ export default {
                 }
             }).then(data=>{
               console.log(data);
-                context = data.body.context
+                context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
             }).catch(error=>{
               console.log(error);
                 this.message= null;
             });
+        },
+
+
+        defaultButtons(message){
+            console.log(message);
+            Api.post('chat', {
+                context: context || {},
+                input: {
+                    text: message || ""
+                }
+            }).then(data=>{
+              console.log(data);
+                context = data.body.context
+                this.geoLocation();
+                this.checkIntent(data.body.output.text.join('\n'));
+            }).catch(error=>{
+              console.log(error);
+            });
+
         },
 
         chat(sender, message){
@@ -108,128 +150,89 @@ export default {
             })
         },
 
+        setMap(){
+            document.getElementById('map').src = `https://maps.googleapis.com/maps/api/staticmap?center=${this.latitude},${this.longitude}&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|${this.latitude}, ${this.longitude}&size=500x500&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y`
+        },
+
         checkIntent(message){
             this.chat('robot', message);
+            
         },
 
         nearestBranch() {
             this.message="Find Nearest Branch"
-            this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.defaultButtons(this.message);
+            this.chat('user', this.message);
+            this.nearestBranches.push({'lat':latitude, 'long':longitude});
             
         },
 
         nearestAtm() {
             this.message="Find Nearest ATM"
-            this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.defaultButtons('user', this.message);
+            this.chat('user', this.message);
 
         },
 
         storeHours() {
             this.message="Bank Hours"
-            this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.defaultButtons('user', this.message);
+            this.chat('user', this.message);
 
         },
 
         cardInfo() {
             this.message="Credit Card Information"
-            this.chat('user', this.message),
-            Api.post('chat', {
-                context: context || {},
-                input: {
-                    text: this.message || ""
-                }
-            }).then(data=>{
-              console.log(data);
-                context = data.body.context
-                this.geoLocation();
-                this.message = null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-              console.log(error);
-                this.message = null;
-            });
+            this.defaultButtons('user', this.message);
+            this.chat('user', this.message);
 
         },
 
         geoLocation() {
             var self = this;
-            var latitude, longitude;
+            
+            
             if(navigator.geolocation) {
                navigator.geolocation.getCurrentPosition(function(position){
                 self.position = position.coords;
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
                 console.log(latitude,longitude);
-
+                
               })
             }
-        },
+        },   
     },
-    mounted: function () {          //called after whole page has loaded
-        this.$nextTick(function () {
-            console.log('test');
-            Api.post('chat', {
+      
+
+    
+
+      mounted: function() {
+            this.$nextTick(function (){
+                Api.post('chat', {
                 context: context || {},
                 input: {
-                    text:""
+                    text: ""
                 }
             }).then(data=>{
               console.log(data);
-                context = data.body.context
+                context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
+
             }).catch(error=>{
               console.log(error);
                 this.message= null;
             });
-        })
-    }
+
+            })
+        },
+
+
+  
+    
 }
+
 </script>
 
 
@@ -238,5 +241,14 @@ export default {
  <style>
  @import '../css/style.css';
  @import '../css/style.scss';
-</style>
+
+.google-map {
+  width: 800px;
+  height: 600px;
+  margin: 0 auto;
+  background: gray;
+}
+    
+    </style>
+
 
