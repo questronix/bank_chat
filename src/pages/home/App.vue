@@ -25,9 +25,7 @@
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
 
-            <gmap-autocomplete
-            @place_changed="setPlace"> 
-            </gmap-autocomplete>
+       
                   
             <div class="messages custom-scroll" >
                 <div class="message" v-for="message in messages">
@@ -41,7 +39,7 @@
 
                     <div class="left-chat" v-if="message.sender === 'robot'">
                     <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
-                        <div class="left-chat" v-if="message.text === 'Would you like to use your current location?' ">
+                        <div class="left-chat" v-if="message.text === 'Which location would you like to use?' ">
                         <div class="nearest-branch custom-scroll">
                             <div class="cardOne">
                                 <div class="chat-card">
@@ -52,11 +50,11 @@
                                     </div>
                                     <div class="card-btn-bundle">
                                         <a href="#" class="card-btn" v-on:click="inputYes">
-                                            Yes
+                                            Use my current location
                                         </a>
-                                        <a href="#" class="card-btn" v-on:click="inputNo">
-                                            No
-                                        </a>
+                                         <gmap-autocomplete class="card-btn"
+                                            @place_changed="setPlace"> 
+                                            </gmap-autocomplete>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +70,8 @@
                         <div class="imgCard">
                             <div class="chat-card">
                                 <div class="card-content">
-                                    <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
+                                    position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
                                 </div>
                             </div>
                         </div>
@@ -108,9 +107,11 @@ import Api from '../../lib/Api';
 import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
 
+
             
 let longitude, latitude = 0;
 let context = undefined;
+let currentPlace = undefined;
 export default {
     name: 'google-map',
     props: ['name'],
@@ -123,6 +124,7 @@ export default {
         nearestBranches: [],
         nearestAtms: [],
         branchCoordinates: {},
+
     }
 
 },
@@ -145,14 +147,22 @@ export default {
                 this.message= null;
             });
         },
+
          setPlace(place) {
+          this.currentPlace = place.name;
+          console.log("hello");
+          this.defaultButtons(place.name);
           console.log(place.geometry.location.lat());
-          console.log(place.geometry.location.lng());
+          var self = this;
+          self.position = place.geometry.location;
+          
+          
+          
         },
 
         defaultButtons(message){
             console.log(message);
-            this.chat('user', this.message);
+            this.chat('user', message);
             Api.post('chat', {
                 context: context || {},
                 input: {
@@ -179,7 +189,8 @@ export default {
         },
 
         setMap(){
-            document.getElementById('map').src = `https://maps.googleapis.com/maps/api/staticmap?center=${this.latitude},${this.longitude}&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|${this.latitude}, ${this.longitude}&size=500x500&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y`
+           document.getElementById('map').src = `https://maps.googleapis.com/maps/api/staticmap?center=${this.latitude},${this.longitude}&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|${this.latitude}, ${this.longitude}&size=500x500&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y`
+        
         },
 
         checkIntent(message){
@@ -210,12 +221,12 @@ export default {
         },
 
         inputYes() {
-            this.message="Yes"
+            this.message="Use my current location"
             this.userInput(this.message);
         },
 
         inputNo() {
-            this.message="No"
+            this.message= place;
             this.userInput(this.message);
         },
 
@@ -233,7 +244,7 @@ export default {
                     self.position = position.coords;
                     latitude = position.coords.latitude;
                     longitude = position.coords.longitude;
-                    console.log(latitude,longitude);
+                    
                 }
 
                 function handleLocationError(error) {
