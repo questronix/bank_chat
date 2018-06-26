@@ -214,7 +214,7 @@ input {
         border-radius: 50%;
         float: left; }
       .wrapper .messages .left-chat .chat-bg, .wrapper .messages .left-chat .chat-card-bundle .chat-card, .wrapper .chat-card-bundle .messages .left-chat .chat-card {
-        max-width: 70%;
+        max-width: 80%;
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
@@ -273,7 +273,7 @@ input {
       .wrapper .chat-card-bundle .chat-card .card-content {
         padding: 10px; }
         .wrapper .chat-card-bundle .chat-card .card-content .card-text {
-          color: #bdbdbd; }
+          color: black; }
       .wrapper .chat-card-bundle .chat-card .card-btn-bundle {
         width: 100%;
         display: flex;
