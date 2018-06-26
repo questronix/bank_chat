@@ -21,7 +21,7 @@
             </div>
             <div class="nav">
                 <span class="fa fa-arrow-left"></span>
-                <p>Val</p>
+                <p>Chassi</p>
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
 
@@ -29,37 +29,56 @@
             @place_changed="setPlace"> 
             </gmap-autocomplete>
                   
-               <div class="messages custom-scroll" >
-                
+            <div class="messages custom-scroll" >
                 <div class="message" v-for="message in messages">
                     
-
-            <div class="right-chat" v-if="message.sender === 'user'">
-                <div class="chat-bg">
-                    <p>{{ message.text }}</p>
-                </div>
-                <img class="avatar" src="https://files.fm/thumb_show.php?i=nv26hu44&view">
-            </div>
-
-            <div class="left-chat" v-if="message.sender === 'robot'">
-                <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
-                    <div class="chat-bg">
-                        <p>{{ message.text }}</p>
+                    <div class="right-chat" v-if="message.sender === 'user'">
+                        <div class="chat-bg">
+                            <p>{{ message.text }}</p>
+                        </div>
+                        <img class="avatar" src="https://files.fm/thumb_show.php?i=nv26hu44&view">
                     </div>
-                </div> 
+
+                    <div class="left-chat" v-if="message.sender === 'robot'">
+                    <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+                        <div class="left-chat" v-if="message.text === 'Would you like to use your current location?' ">
+                        <div class="nearest-branch custom-scroll">
+                            <div class="cardOne">
+                                <div class="chat-card">
+                                    <div class="card-content">
+                                        <p class="card-text">
+                                            {{ message.text }}
+                                        </p>
+                                    </div>
+                                    <div class="card-btn-bundle">
+                                        <a href="#" class="card-btn" v-on:click="inputYes">
+                                            Yes
+                                        </a>
+                                        <a href="#" class="card-btn" v-on:click="inputNo">
+                                            No
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                        <div v-else class="chat-bg">
+                            <p>{{ message.text }}</p>
+                        </div>
+                    </div> 
            
-            <div class="left-chat" v-if="message.text === 'Please wait while we locate nearest store based on your address.'">
-                <img class="avatar"  src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
-                <div class="imgCard">
-                    <div class="chat-card">
-                        <div class="card-content">
-                            <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                    <div class="left-chat" v-if="message.text === 'Please wait while we process your location.'">
+                    <img class="avatar"  src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+                        <div class="imgCard">
+                            <div class="chat-card">
+                                <div class="card-content">
+                                    <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                   </div>
-                </div>      
-            </div> 
-                </div>
+                </div> 
+            </div>
    
             <div class="chat-suggestions custom-scroll">
                 <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
@@ -102,9 +121,8 @@ export default {
         messages: [],
         message: '',
         nearestBranches: [],
+        nearestAtms: [],
         branchCoordinates: {},
-        
-
     }
 
 },
@@ -126,10 +144,7 @@ export default {
               console.log(error);
                 this.message= null;
             });
-
-
         },
-
          setPlace(place) {
           console.log(place.geometry.location.lat());
           console.log(place.geometry.location.lng());
@@ -137,6 +152,7 @@ export default {
 
         defaultButtons(message){
             console.log(message);
+            this.chat('user', this.message);
             Api.post('chat', {
                 context: context || {},
                 input: {
@@ -145,10 +161,12 @@ export default {
             }).then(data=>{
               console.log(data);
                 context = data.body.context
+                this.message= null;
                 this.geoLocation();
                 this.checkIntent(data.body.output.text.join('\n'));
             }).catch(error=>{
               console.log(error);
+              this.message= null;
             });
 
         },
@@ -172,79 +190,81 @@ export default {
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.defaultButtons(this.message);
-            this.chat('user', this.message);
             this.nearestBranches.push({'lat':latitude, 'long':longitude});
-            
         },
 
         nearestAtm() {
             this.message="Find Nearest ATM"
-            this.defaultButtons('user', this.message);
-            this.chat('user', this.message);
-
+            this.defaultButtons(this.message);
+            this.nearestAtms.push({'lat':latitude, 'long':longitude});
         },
 
         storeHours() {
             this.message="Bank Hours"
-            this.defaultButtons('user', this.message);
-            this.chat('user', this.message);
-
+            this.defaultButtons(this.message);
         },
 
         cardInfo() {
             this.message="Credit Card Information"
-            this.defaultButtons('user', this.message);
-            this.chat('user', this.message);
-
+            this.defaultButtons(this.message);
         },
+
+        inputYes() {
+            this.message="Yes"
+            this.userInput(this.message);
+        },
+
+        inputNo() {
+            this.message="No"
+            this.userInput(this.message);
+        },
+
 
         geoLocation() {
             var self = this;
-            
-            
             if(navigator.geolocation) {
-               navigator.geolocation.getCurrentPosition(function(position){
-                self.position = position.coords;
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
-                console.log(latitude,longitude);
-                
-              })
+               navigator.geolocation.getCurrentPosition(
+                    displayLocationInfo,
+                    handleLocationError,
+                    {enableHighAccuracy: true, maximumAge: 1500000, timeout: 0}
+                );
+
+                function displayLocationInfo(position){
+                    self.position = position.coords;
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    console.log(latitude,longitude);
+                }
+
+                function handleLocationError(error) {
+                    switch (error.code) {
+                        case 3:
+                            displayLocationInfo({ coords: { longitude: 33.631839, latitude: 27.380583 } });
+                            navigator.geolocation.getCurrentPosition(displayLocationInfo, handleLocationError);
+                            break;
+                    }
+                }
             }
         },   
     },
-      
-
-    
-
-      mounted: function() {
-            
-
-            this.$nextTick(function (){
-                Api.post('chat', {
-                context: context || {},
+    mounted: function() {
+        this.$nextTick(function (){
+            Api.post('chat', {
+            context: context || {},
                 input: {
                     text: ""
                 }
             }).then(data=>{
-              console.log(data);
+                console.log(data);
                 context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
-
             }).catch(error=>{
-              console.log(error);
+                console.log(error);
                 this.message= null;
             });
-
-            })
-        },
-
-        
-
-
-  
-    
+        })
+    },
 }
 
 </script>
