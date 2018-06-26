@@ -3,6 +3,7 @@
 <div class="wrapper chat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
             <div id="modal" class="animated modal">
                 <div class="modal-content animated">
                     <span class="modal-close fa fa-times"></span>
@@ -24,12 +25,14 @@
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
 
-            
-
-            <div class="messages custom-scroll" >
-
+            <gmap-autocomplete
+            @place_changed="setPlace"> 
+            </gmap-autocomplete>
+                  
+               <div class="messages custom-scroll" >
+                
                 <div class="message" v-for="message in messages">
-
+                    
 
             <div class="right-chat" v-if="message.sender === 'user'">
                 <div class="chat-bg">
@@ -85,6 +88,7 @@
 import Api from '../../lib/Api';
 import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
+
             
 let longitude, latitude = 0;
 let context = undefined;
@@ -122,8 +126,14 @@ export default {
               console.log(error);
                 this.message= null;
             });
+
+
         },
 
+         setPlace(place) {
+          console.log(place.geometry.location.lat());
+          console.log(place.geometry.location.lng());
+        },
 
         defaultButtons(message){
             console.log(message);
@@ -208,6 +218,8 @@ export default {
     
 
       mounted: function() {
+            
+
             this.$nextTick(function (){
                 Api.post('chat', {
                 context: context || {},
@@ -227,6 +239,8 @@ export default {
 
             })
         },
+
+        
 
 
   

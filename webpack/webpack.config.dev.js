@@ -34,7 +34,6 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        exclude: /node_modules/,
         loader: 'vue-loader'
       },
       {
