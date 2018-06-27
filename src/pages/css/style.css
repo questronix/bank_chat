@@ -369,7 +369,7 @@ input {
         float: left; 
       box-shadow: 10px 10px 5px grey;}
 
-    .wrapper  .message .left-chat .chat-bg, .wrapper  .message .left-chat .nearest-branch .chat-card, .wrapper .nearest-branch .chat-card {
+    .wrapper  .message .left-chat .chat-bg, .wrapper  .message .left-chat .near-chat .nearest-branch .chat-card, .wrapper .nearest-branch .chat-card {
         max-width: 70%;
         min-width: auto;
         background-color: #f1f1f1;
@@ -464,3 +464,23 @@ input {
     .wrapper .nearest-branch .chat-card .card-btn-bundle .card-btn:hover {
             background-color: #6cc27b;
             color: white; }
+
+
+    .wrapper .chat-area .left-chat .chat-card-bundle .chat-card, .wrapper .chat-card-bundle .chat-area .left-chat .chat-card {
+        max-width: 70%;
+        min-width: auto;
+        background-color: #f1f1f1;
+        padding: 15px;
+        border-radius: 20px;
+        margin-left: 10px;
+        word-break: break-all; }
+    .wrapper .chat-area .right-chat {
+      min-width: auto;
+      margin: 10px;
+      display: flex;
+      justify-content: flex-end; }
+      .wrapper .chat-area .right-chat .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        float: right; }
