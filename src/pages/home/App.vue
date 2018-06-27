@@ -27,8 +27,8 @@
 
        
                   
-            <div class="messages custom-scroll" >
-                <div class="message" v-for="message in messages">
+            <div class="messages custom-scroll " >
+                <div class="message " v-for="message in messages">
                     
                     <div class="right-chat" v-if="message.sender === 'user'">
                         <div class="chat-bg">
@@ -39,8 +39,7 @@
 
                     <div class="left-chat" v-if="message.sender === 'robot'">
                     <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
-                        <div class="left-chat" v-if="message.text === 'Which location would you like to use?' ">
-                        <div class="nearest-branch custom-scroll">
+                        <div class="nearest-branch" v-if="message.text === 'Which location would you like to use?' ">
                             <div class="cardOne">
                                 <div class="chat-card">
                                     <div class="card-content">
@@ -59,24 +58,26 @@
                                 </div>
                             </div>
                         </div> 
-                    </div>
+
                         <div v-else class="chat-bg">
                             <p>{{ message.text }}</p>
                         </div>
                     </div> 
            
-                    <div class="left-chat" v-if="message.text === 'Please wait while we process your location.'">
-                    <img class="avatar"  src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
-                        <div class="imgCard">
-                            <div class="chat-card">
+                    <div class="left-chat" v-if="message.text === 'Please wait while we process your location.'" v>
+                        <div class="chat-card-bundle custom-scroll"  >
+                            <div class="chat-card"  v-for="coordinates in latLongs">
                                 <div class="card-content">
+                                    <div class="imgCard">
                                     <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
-                                    position.latitude + ',' + position.longitude + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + position.latitude + ',' + position.longitude + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    coordinates.lat + ',' + coordinates.long + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div> 
+
             </div>
    
             <div class="chat-suggestions custom-scroll">
@@ -124,6 +125,10 @@ export default {
         nearestBranches: [],
         nearestAtms: [],
         branchCoordinates: {},
+        action: '',
+        latLongs: [],
+        coordinates: '',
+
 
     }
 
@@ -142,6 +147,8 @@ export default {
                 context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
+                this.action = data.body.context.action;
+                console.log(this.action);
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -155,8 +162,18 @@ export default {
           console.log(place.geometry.location.lat());
           var self = this;
           self.position = place.geometry.location;
+
+          this.latLongs.push({
+                'lat': place.geometry.location.lat(),
+                'long':place.geometry.location.lng(),
+          });
           
-          
+          // Api.get(`chat?name=${place.name}`).then(data=>{
+          //   console.log(data);
+          // }).catch(error=>{
+          //   console.log(error);
+          //       this.message= null;
+          //   });
           
         },
 
@@ -174,6 +191,7 @@ export default {
                 this.message= null;
                 this.geoLocation();
                 this.checkIntent(data.body.output.text.join('\n'));
+                this.action = data.body.context.action;
             }).catch(error=>{
               console.log(error);
               this.message= null;
@@ -237,13 +255,13 @@ export default {
                navigator.geolocation.getCurrentPosition(
                     displayLocationInfo,
                     handleLocationError,
+                    addtoLocationArray,
                     {enableHighAccuracy: true, maximumAge: 1500000, timeout: 0}
                 );
 
                 function displayLocationInfo(position){
                     self.position = position.coords;
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
+                    
                     
                 }
 
@@ -254,6 +272,13 @@ export default {
                             navigator.geolocation.getCurrentPosition(displayLocationInfo, handleLocationError);
                             break;
                     }
+                }
+
+                function addtoLocationArray(position){
+                    self.latLongs.push({
+                        'lat': position.latitude,
+                        'long': position.longitude,
+                    })
                 }
             }
         },   

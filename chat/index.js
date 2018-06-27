@@ -14,4 +14,15 @@ router.post('/', (req, res, next)=>{
   });
 });
 
+router.get('/', (req, res, next)=>{
+  ajax.setOptions({
+    url: `${process.env.CORE_URL}/chat?name=${req.query.name}`
+  });
+  ajax.get().then(data=>{
+    res.json(data);
+  }).catch(error=>{
+    res.json(error);
+  });
+});
+
 module.exports = router;
