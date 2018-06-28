@@ -115,8 +115,6 @@ import Api from '../../lib/Api';
 //import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
 
-
-            
 let longitude, latitude = 0;
 let context = undefined;
 let currentPlace = undefined;
