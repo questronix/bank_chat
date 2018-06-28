@@ -169,18 +169,22 @@ export default {
           console.log(place.geometry.location.lat());
           var self = this;
           self.position = place.geometry.location;
-
+          console.log(self.position);
           this.latLongs.push({
                 'lat': place.geometry.location.lat(),
                 'long':place.geometry.location.lng(),
           });
-          
-          // Api.get(`chat?name=${place.name}`).then(data=>{
-          //   console.log(data);
-          // }).catch(error=>{
-          //   console.log(error);
-          //       this.message= null;
-          //   });
+          Api.post(`chat`,{
+              context: context || {},
+              lat: self.position.lat(),
+              lng: self.position.lng(),
+              input: this.message || ""
+          }).then(data=>{
+            console.log(data);
+          }).catch(error=>{
+            console.log(error);
+                this.message= null;
+            });
           
         },
 

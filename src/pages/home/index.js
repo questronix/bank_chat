@@ -13,15 +13,6 @@ Vue.use(VueGoogleMaps, {
   }
 });
 
-Api.post('login', {
-  username: 'kenster',
-  password: 'P@ssw0rd'
-}).then(data=>{
-  console.log(data);
-}).catch(error=>{
-  console.log(error);
-});
-
 new Vue({
   el: '#app',
   render: h => h(App)
