@@ -214,7 +214,7 @@ input {
         border-radius: 50%;
         float: left; }
       .wrapper .messages .left-chat .chat-bg, .wrapper .messages .left-chat .chat-card-bundle .chat-card, .wrapper .chat-card-bundle .messages .left-chat .chat-card {
-        max-width: 80%;
+        max-width: 100%;
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
@@ -378,7 +378,7 @@ input {
         margin-left: 10px;
         word-break: break-all; }
 
-    .wrapper  .message .left-chat .chat-bg, .wrapper  .message .left-chat .imgCard .chat-card, .wrapper .imgCard .chat-card {
+    .wrapper  .message .left-chat .chat-bg {
         max-width: 100%;
         min-width: auto;
         background-color: #f1f1f1;
@@ -466,8 +466,8 @@ input {
             color: white; }
 
 
-    .wrapper .chat-area .left-chat .chat-card-bundle .chat-card, .wrapper .chat-card-bundle .chat-area .left-chat .chat-card {
-        max-width: 70%;
+    .wrapper .messages .message .left-chat .chat-card-bundle .chat-card , .wrapper .left-chat .chat-card-bundle .chat-card {
+        max-width: 100%;
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
@@ -484,3 +484,41 @@ input {
         height: 35px;
         border-radius: 50%;
         float: right; }
+
+
+    .wrapper .chat-card-bundle {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; }
+
+    .wrapper .chat-card-bundle .chat-card {
+        background-color: white !important;
+        border: solid 2px #eee;
+        padding: 0 !important;
+        width: 300px !important;
+        flex: 0 0 auto; }
+    .wrapper .chat-card-bundle .chat-card .card-content {
+        padding: 10px; }
+        
+    .wrapper .chat-card-bundle .chat-card .card-content .card-text {
+          color: #bdbdbd; }
+    .wrapper .chat-card-bundle .chat-card .card-btn-bundle {
+        width: 80%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column; }
+
+    .wrapper .chat-card-bundle .chat-card .card-btn-bundle .card-btn {
+          border-top: solid 1px #eee;
+          padding: 10px 10px;
+          text-decoration: none;
+          color: #6cc27b;
+          transition: .3s ease-in-out; }
+    
+    .wrapper .chat-card-bundle .chat-card .card-btn-bundle .card-btn:nth-last-child(1) {
+        border-radius: 0px 0px 20px 20px; }
+    
+    .wrapper .chat-card-bundle .chat-card .card-btn-bundle .card-btn:hover {
+            background-color: #6cc27b;
+            color: white; }

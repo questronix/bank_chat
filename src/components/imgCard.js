@@ -12,7 +12,8 @@ let imgCard = Vue.component('imgCard', {
         <div class="imgCard">
             <div class="chat-card">
                 <div class="card-content">
-                    <img class="msg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZI2cDly50scH-DCSrfUux_cTWXlGo-mNYN49Ivi8sUVAqIjIr6g">
+                    <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
+                                    coordinates.lat + ',' + coordinates.long + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
                 </div>
             </div>
            </div>
