@@ -45,6 +45,7 @@ let ajax = {
         this.options.json = true;
         this.options.body = data;
         return new Promise((resolve, reject) => {
+            console.log(this.options);
             request.post(this.options, (err, response, body) => {
                 if(!err){
                     resolve({
