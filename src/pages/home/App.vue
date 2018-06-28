@@ -68,11 +68,18 @@
                         <div class="chat-card-bundle custom-scroll"  >
                             <div class="chat-card"  v-for="coordinates in latLongs">
                                 <div class="card-content">
-                                    <div class="imgCard">
+                                    
                                     <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
-                                    coordinates.lat + ',' + coordinates.long + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=300x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    coordinates.lat + ',' + coordinates.long + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=280x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    <br><br>
+                                     <span class="style-green">  Open   </span>
+                                 <br><br>
+                                 <div class="card-btn-bundle">
+                                    <a href="#" class="card-btn" v-on:click="inputYes">
+                                        Get address
+                                    </a>
                                 </div>
-                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -105,7 +112,7 @@
 
 <script>
 import Api from '../../lib/Api';
-import cardOne from '../../components/cardOne';
+//import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
 
 
@@ -147,7 +154,7 @@ export default {
                 context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
-                this.action = data.body.context.action;
+                
                 console.log(this.action);
             }).catch(error=>{
               console.log(error);
@@ -189,9 +196,8 @@ export default {
               console.log(data);
                 context = data.body.context
                 this.message= null;
-                this.geoLocation();
                 this.checkIntent(data.body.output.text.join('\n'));
-                this.action = data.body.context.action;
+                
             }).catch(error=>{
               console.log(error);
               this.message= null;
@@ -241,6 +247,7 @@ export default {
         inputYes() {
             this.message="Use my current location"
             this.userInput(this.message);
+            this.geoLocation();
         },
 
         inputNo() {
@@ -261,7 +268,9 @@ export default {
 
                 function displayLocationInfo(position){
                     self.position = position.coords;
-                    
+                    latitude = position.latitude;
+                    longitude = position.longitude;
+                    addtoLocationArray(self.position);
                     
                 }
 
