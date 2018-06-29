@@ -76,7 +76,7 @@
                                  <br><br>
                                  <div class="card-btn-bundle">
                                     <a href="#" class="card-btn" v-on:click="inputYes">
-                                        Get address
+                                       {{ coordinates.address }}
                                     </a>
                                 </div>
                             </div>
@@ -162,24 +162,35 @@ export default {
 
          setPlace(place) {
           this.currentPlace = place.name;
-          console.log("hello");
-          this.defaultButtons(place.name);
+
+          this.chat('user', place.name);
           var self = this;
           self.position = place.geometry.location;
-          this.latLongs.push({
-                'lat': place.geometry.location.lat(),
-                'long':place.geometry.location.lng(),
-          });
+          
           context.action = "fetch_location_lat_lng";
           context.lat = self.position.lat();
           context.lng = self.position.lng();
+          
           let options = {
               context: context || {},
-              input: this.message || ""
+              input:  {
+                    text: place.name || ""
+                }
           };
+
+
           Api.post(`chat`, options).then(data=>{
             console.log('Result: ' , data);
             console.log('Options: ' , options);
+            for(var i=0; i < data.body.locations.length; i++){
+                this.latLongs.push({
+                'lat': data.body.locations[i].latitude,
+                'long': data.body.locations[i].longitude,
+                'address': data.body.locations[i].address,
+                });
+            }
+            this.checkIntent(data.body.output.text.join('\n'));
+
           }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -197,7 +208,7 @@ export default {
                 }
             }).then(data=>{
               console.log(data);
-                context = data.body.context
+                context = data.body.context;
                 this.message= null;
                 this.checkIntent(data.body.output.text.join('\n'));
                 
