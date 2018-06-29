@@ -5,6 +5,7 @@ import Api from '../../lib/Api';
 import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
 import * as VueGoogleMaps from "vue2-google-maps";
+import '../css/style.scss';
 
 Vue.use(VueGoogleMaps, {
   load: {
