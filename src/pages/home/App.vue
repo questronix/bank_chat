@@ -164,21 +164,22 @@ export default {
           this.currentPlace = place.name;
           console.log("hello");
           this.defaultButtons(place.name);
-          console.log(place.geometry.location.lat());
           var self = this;
           self.position = place.geometry.location;
-          console.log(self.position);
           this.latLongs.push({
                 'lat': place.geometry.location.lat(),
                 'long':place.geometry.location.lng(),
           });
-          Api.post(`chat`,{
+          context.action = "fetch_location_lat_lng";
+          context.lat = self.position.lat();
+          context.lng = self.position.lng();
+          let options = {
               context: context || {},
-              lat: self.position.lat(),
-              lng: self.position.lng(),
               input: this.message || ""
-          }).then(data=>{
-            console.log(data);
+          };
+          Api.post(`chat`, options).then(data=>{
+            console.log('Result: ' , data);
+            console.log('Options: ' , options);
           }).catch(error=>{
             console.log(error);
                 this.message= null;
