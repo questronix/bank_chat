@@ -70,14 +70,17 @@
                                 <div class="card-content">
                                     
                                     <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
-                                    coordinates.lat + ',' + coordinates.long + '&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=280x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    coordinates.lat + ',' + coordinates.long + '&zoom=20&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=280x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
                                     <br><br>
-                                     <span class="style-green">  Open   </span>
+                                     <span class="style-green">  Open </span>
+                                    
                                  <br><br>
                                  <div class="card-btn-bundle">
-                                    <a href="#" class="card-btn" v-on:click="inputYes">
-                                       {{ coordinates.address }}
-                                    </a>
+                                    <div class="card-btn">
+                                       {{ coordinates.address }} <br>
+                                       Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
+
+                                    </div>
                                 </div>
                             </div>
                             </div>
@@ -133,8 +136,6 @@ export default {
         action: '',
         latLongs: [],
         coordinates: '',
-
-
     }
 
 },
@@ -187,10 +188,11 @@ export default {
                 'lat': data.body.locations[i].latitude,
                 'long': data.body.locations[i].longitude,
                 'address': data.body.locations[i].address,
+                'opening' : data.body.locations[i].opening,
+                'closing' : data.body.locations[i].closing
                 });
             }
             this.checkIntent(data.body.output.text.join('\n'));
-
           }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -224,11 +226,6 @@ export default {
                 'sender' : sender,
                 'text' : message
             })
-        },
-
-        setMap(){
-           document.getElementById('map').src = `https://maps.googleapis.com/maps/api/staticmap?center=${this.latitude},${this.longitude}&zoom=15&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|${this.latitude}, ${this.longitude}&size=500x500&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y`
-        
         },
 
         checkIntent(message){
