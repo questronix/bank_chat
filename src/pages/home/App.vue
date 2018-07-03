@@ -28,7 +28,7 @@
        
                   
             <div class="messages custom-scroll " >
-                <div class="message " v-for="message in messages">
+                <div class="message " v-for="(message, index) in messages" :key="index">
                     
                     <div class="right-chat" v-if="message.sender === 'user'">
                         <div class="chat-bg">
@@ -66,11 +66,10 @@
            
                     <div class="left-chat" v-if="message.text === 'Please wait while we process your location.'" v>
                         <div class="chat-card-bundle custom-scroll"  >
-                            <div class="chat-card"  v-for="coordinates in latLongs">
+                            <div class="chat-card"  v-for="(coordinates, index) in latLongs" :key="index">
                                 <div class="card-content">
                                     
-                                    <img id="map" v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?center=' + 
-                                    coordinates.lat + ',' + coordinates.long + '&zoom=20&scale=40&markers=icon:http%3A%2F%2Fgoo.gl%2FGjVUSC|' + coordinates.lat + ',' + coordinates.long + '&size=280x250&key=AIzaSyA_rXMrK9f-sVkZ_dyRtcShTjMvLhWY67Y'">
+                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7Clabel:C%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
                                     <br><br>
                                      <span class="style-green">  Open </span>
                                     
@@ -97,7 +96,7 @@
                     Find Nearest ATM</a>
                 <a class="chat-suggestions-items" id="bank-hours" v-on:click="storeHours">
                     Bank Hours</a>
-                <a class="chat-suggestions-items" id="card-info "v-on:click="cardInfo">
+                <a class="chat-suggestions-items" id="card-info" v-on:click="cardInfo">
                     Credit Card Information</a>
             </div>
 
@@ -106,7 +105,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton'  v-model="message" v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text">{{message}}</span>
             </div>
         </div>
     </div>            
@@ -143,16 +142,16 @@ export default {
     methods: {
         userInput() {
             this.chat('user', this.message);
-            Api.post('chat', {
+            Api.post('/', {
                 context: context || {},
                 input: {
                     text: this.message || ""
                 }
             }).then(data=>{
               console.log(data);
-                context = data.body.context;
+                context = data.context;
                 this.message= null;
-                this.checkIntent(data.body.output.text.join('\n'));
+                this.checkIntent(data.output.text.join('\n'));
                 
                 console.log(this.action);
             }).catch(error=>{
@@ -180,19 +179,20 @@ export default {
           };
 
 
-          Api.post(`chat`, options).then(data=>{
+          Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
+            console.log('Locations: ' , data.locations);
             console.log('Options: ' , options);
-            for(var i=0; i < data.body.locations.length; i++){
+            for(var i=0; i < data.locations.length; i++){
                 this.latLongs.push({
-                'lat': data.body.locations[i].latitude,
-                'long': data.body.locations[i].longitude,
-                'address': data.body.locations[i].address,
-                'opening' : data.body.locations[i].opening,
-                'closing' : data.body.locations[i].closing
+                'lat': data.locations[i].latitude,
+                'long': data.locations[i].longitude,
+                'address': data.locations[i].address,
+                'opening' : data.locations[i].opening,
+                'closing' : data.locations[i].closing
                 });
             }
-            this.checkIntent(data.body.output.text.join('\n'));
+            this.checkIntent(data.output.text.join('\n'));
           }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -203,16 +203,16 @@ export default {
         defaultButtons(message){
             console.log(message);
             this.chat('user', message);
-            Api.post('chat', {
+            Api.post('/', {
                 context: context || {},
                 input: {
                     text: message || ""
                 }
             }).then(data=>{
               console.log(data);
-                context = data.body.context;
+                context = data.context;
                 this.message= null;
-                this.checkIntent(data.body.output.text.join('\n'));
+                this.checkIntent(data.output.text.join('\n'));
                 
             }).catch(error=>{
               console.log(error);
@@ -304,22 +304,20 @@ export default {
         },   
     },
     mounted: function() {
-        this.$nextTick(function (){
-            Api.post('chat', {
-            context: context || {},
-                input: {
-                    text: ""
-                }
-            }).then(data=>{
-                console.log(data);
-                context = data.body.context;
-                this.message= null;
-                this.checkIntent(data.body.output.text.join('\n'));
-            }).catch(error=>{
-                console.log(error);
-                this.message= null;
-            });
-        })
+        Api.post('/', {
+        context: context || {},
+            input: {
+                text: ""
+            }
+        }).then(data=>{
+            console.log(data);
+            context = data.context;
+            this.message= null;
+            this.checkIntent(data.output.text.join('\n'));
+        }).catch(error=>{
+            console.log(error);
+            this.message= null;
+        });
     },
 }
 
