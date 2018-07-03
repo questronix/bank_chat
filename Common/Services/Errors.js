@@ -37,6 +37,13 @@ module.exports = {
 					message: 'Not Found'
 				}
 			},
+			WATSON_SEND_MSG_ERROR: {
+				status: 400,
+				error: {
+					code: -7,
+					message: 'There is problem in fetching data in conversation.'
+				}
+			},
 		};
 		return errors[tag];
 	},
