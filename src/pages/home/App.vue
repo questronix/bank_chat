@@ -109,7 +109,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text">{{message}}</span>
+                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
             </div>
         </div>
     </div>            
