@@ -59,14 +59,10 @@
                             </div>
                         </div> 
 
-                        <div v-else class="chat-bg">
-                            <p>{{ message.text }}</p>
-                        </div>
-                    </div> 
-           
-                    <div class="left-chat" v-if="message.text === 'Please wait while we process your location.'" v>
-                        <div class="chat-card-bundle custom-scroll"  >
-                            <div class="chat-card"  v-for="(coordinates, index) in latLongs" :key="index">
+                        <div class="chat-card-bundle custom-scroll" v-if="message.locations !== null">
+                            
+                            <div class="chat-card"  v-for="(coordinates, index) in message.locations" :key="index">
+
                                 <div class="card-content">
                                     
                                     <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7Clabel:C%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
@@ -82,9 +78,17 @@
                                     </div>
                                 </div>
                             </div>
+                           
+
                             </div>
                         </div>
-                    </div>
+                     
+                        <div v-else class="chat-bg">
+                            <p>{{ message.text }}</p>
+                        </div>
+                    </div> 
+           
+                    
                 </div> 
 
             </div>
@@ -105,7 +109,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text">{{message}}</span>
+                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
             </div>
         </div>
     </div>            
@@ -129,12 +133,10 @@ export default {
         user: 'You',
         messages: [],
         message: '',
-        nearestBranches: [],
-        nearestAtms: [],
-        branchCoordinates: {},
         action: '',
         latLongs: [],
         coordinates: '',
+        arrayLength: '',
     }
 
 },
@@ -148,12 +150,9 @@ export default {
                     text: this.message || ""
                 }
             }).then(data=>{
-              console.log(data);
                 context = data.context;
                 this.message= null;
-                this.checkIntent(data.output.text.join('\n'));
-                
-                console.log(this.action);
+                this.checkIntent(data.output.text.join('\n'), null);
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -163,10 +162,9 @@ export default {
          setPlace(place) {
           this.currentPlace = place.name;
 
-          this.chat('user', place.name);
+          
           var self = this;
           self.position = place.geometry.location;
-          
           context.action = "fetch_location_lat_lng";
           context.lat = self.position.lat();
           context.lng = self.position.lng();
@@ -178,7 +176,7 @@ export default {
                 }
           };
 
-
+           this.chat('user', place.name, null);
           Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
             console.log('Locations: ' , data.locations);
@@ -189,10 +187,22 @@ export default {
                 'long': data.locations[i].longitude,
                 'address': data.locations[i].address,
                 'opening' : data.locations[i].opening,
-                'closing' : data.locations[i].closing
+                'closing' : data.locations[i].closing,
+                
                 });
             }
-            this.checkIntent(data.output.text.join('\n'));
+           
+            this.checkIntent(data.output.text.join('\n'),  null);
+            
+            this.arrayLength = data.locations.length;
+            if(this.arrayLength>0){
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
+            }
+            else{
+                this.checkIntent("Sorry, there are no branches near you.",  null);
+            }
+            this.latLongs = [];
+            
           }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -212,7 +222,7 @@ export default {
               console.log(data);
                 context = data.context;
                 this.message= null;
-                this.checkIntent(data.output.text.join('\n'));
+                this.checkIntent(data.output.text.join('\n'), null);
                 
             }).catch(error=>{
               console.log(error);
@@ -221,15 +231,16 @@ export default {
 
         },
 
-        chat(sender, message){
+        chat(sender, message, array){
             this.messages.push({
                 'sender' : sender,
-                'text' : message
+                'text' : message,
+                'locations' : array,
             })
         },
 
-        checkIntent(message){
-            this.chat('robot', message);
+        checkIntent(message, array){
+            this.chat('robot', message, array);
             
         },
 
@@ -313,7 +324,7 @@ export default {
             console.log(data);
             context = data.context;
             this.message= null;
-            this.checkIntent(data.output.text.join('\n'));
+            this.checkIntent(data.output.text.join('\n'), null);
         }).catch(error=>{
             console.log(error);
             this.message= null;
