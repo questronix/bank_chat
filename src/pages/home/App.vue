@@ -109,7 +109,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text">{{message}}</span>
             </div>
         </div>
     </div>            
@@ -137,6 +137,7 @@ export default {
         latLongs: [],
         coordinates: '',
         arrayLength: '',
+        allLocations: [],
     }
 
 },
@@ -160,15 +161,11 @@ export default {
         },
 
          setPlace(place) {
-          this.currentPlace = place.name;
-
-          
           var self = this;
           self.position = place.geometry.location;
           context.action = "fetch_location_lat_lng";
           context.lat = self.position.lat();
           context.lng = self.position.lng();
-          
           let options = {
               context: context || {},
               input:  {
@@ -201,6 +198,8 @@ export default {
             else{
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
+            console.log(this.arrayLength);
+            this.allLocations.push(this.latLongs);
             this.latLongs = [];
             
           }).catch(error=>{
@@ -222,7 +221,7 @@ export default {
               console.log(data);
                 context = data.context;
                 this.message= null;
-                this.checkIntent(data.output.text.join('\n'), null);
+                this.checkIntent(data.output.text.join('\n'));
                 
             }).catch(error=>{
               console.log(error);
