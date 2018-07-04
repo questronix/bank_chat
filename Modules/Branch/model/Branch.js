@@ -1,4 +1,4 @@
-const db = require('../../../Common/Services/Database');
+const db = require('../../Common/service/Database');
 
 const TABLE_NAME = 'branch';
 const PARAMS = 'PARAMS';
