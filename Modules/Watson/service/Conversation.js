@@ -35,32 +35,7 @@ module.exports.sendMessage = (context, input)=> {
             error: error
           });
         });
-      }
-      else if(data.context.action === "fetch_atm_location_lat_lng"){
-        let atm = action.load('nearestATMLocation', context);
-        atm.then(locs=>{
-          data.locations = locs;
-          resolve(data);
-        }).catch(error=>{
-          reject({
-            status: 500,
-            error: error
-          });
-        });
-      }
-      else if(data.context.action === "fetch_bank_hours"){
-        let branch = action.load('checkBankHours', context);
-        branch.then(locs=>{
-          data.locations = locs;
-          resolve(data);
-        }).catch(error=>{
-          reject({
-            status: 500,
-            error: error
-          });
-        });
-      }
-      else{
+      }else{
         resolve(data); 
       }
     });
