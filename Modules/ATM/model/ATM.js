@@ -1,7 +1,7 @@
 const TAG = '[ATM]';
 const db = require('../../Common/service/Database');
-const err = require('../Common/service/Errors');
-const logger = require('../Common/service/Logger');
+const err = require('../../Common/service/Errors');
+const logger = require('../../Common/service/Logger');
 
 const TABLE_NAME = 'atm';
 const PARAMS = 'PARAMS';

@@ -24,9 +24,6 @@
                 <p>Chassi</p>
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
-
-       
-                  
             <div class="messages custom-scroll " >
                 <div class="message " v-for="(message, index) in messages" :key="index">
                     
@@ -59,13 +56,13 @@
                             </div>
                         </div> 
 
-                        <div class="chat-card-bundle custom-scroll" v-if="message.locations !== null">
+                        <div class="chat-card-bundle custom-scroll" v-else-if="message.locations !== null">
                             
                             <div class="chat-card"  v-for="(coordinates, index) in message.locations" :key="index">
 
                                 <div class="card-content">
                                     
-                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7Clabel:C%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
                                     <br><br>
                                      <span class="style-green">  Open </span>
                                     
@@ -140,9 +137,9 @@ export default {
     }
 },
     methods: {
+        //normal inputs only, typed by the user.
         userInput() {
             this.chat('user', this.message);
-
             Api.post('/', {
                 context: context || {},
                 input: {
@@ -162,7 +159,7 @@ export default {
          setPlace(place) {
           var self = this;
           self.position = place.geometry.location;
-          context.action = "fetch_location_lat_lng";
+          context.action = this.action;
           context.lat = self.position.lat();
           context.lng = self.position.lng();
           let options = {
@@ -188,7 +185,7 @@ export default {
             }
            
             this.checkIntent(data.output.text.join('\n'),  null);
-            
+            this.action = data.context.action;
             this.arrayLength = data.locations.length;
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs);
@@ -196,22 +193,22 @@ export default {
             else{
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
-            console.log(this.arrayLength);
-            this.allLocations.push(this.latLongs);
             this.latLongs = [];
-            
           }).catch(error=>{
             console.log(error);
                 this.message= null;
             });
           
         },
+
         setCurrentPlace(latitude,longitude) {
           var self = this;
-          context.action = "fetch_location_lat_lng";
+          if(this.action === "check_location_to_use"){
+            context.action = "fetch_location_lat_lng"
+          }else{
+           context.action = "fetch_atm_location_lat_lng";}
           context.lat = latitude;
           context.lng = longitude;
-          console.log(latitude, longitude);
           let options = {
               context: context || {},
               
@@ -232,6 +229,7 @@ export default {
             }
             
             this.arrayLength = data.locations.length;
+            this.action = data.context.action;
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs);
             }
@@ -260,8 +258,8 @@ export default {
               console.log(data);
                 context = data.context;
                 this.message= null;
-                this.checkIntent(data.output.text.join('\n'));
-                
+                this.checkIntent(data.output.text.join('\n'), null);
+                this.action = data.context.action;
             }).catch(error=>{
               console.log(error);
               this.message= null;
