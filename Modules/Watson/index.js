@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const watson = require('./Services/Conversation');
-const Errors = require('../../Common/Services/Errors');
+const watson = require('./service/Conversation');
+const Errors = require('../Common/service/Errors');
 
 router.get('/', (req, res, next)=>{
   //initial context

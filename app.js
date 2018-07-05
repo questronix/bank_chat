@@ -7,7 +7,7 @@ const express = require('express');
 const session = require('express-session');
 
 //service for logging
-const logger = require('./Common/Services/Logger');
+const logger = require('./Modules/Common/service/Logger');
 
 //create instance
 const app = express();
@@ -49,7 +49,7 @@ app.use(function (req, res, next) {
 // serve the files out of ./public as our main files
 app.use('/static', express.static(path.join(__dirname, 'dist/public/')));
 
-const db = require('./Common/Services/Database');
+const db = require('./Modules/Common/service/Database');
 let mysqlConnect = db.connect();
 mysqlConnect.then((connect) => {
     logger.log('info', '[MySQLDB] Database connected.', connect);
