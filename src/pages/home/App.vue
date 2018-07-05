@@ -120,7 +120,6 @@
 import Api from '../../lib/Api';
 //import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
-
 let longitude = 0, latitude = 0;
 let context = undefined;
 let currentPlace = undefined;
@@ -137,28 +136,28 @@ export default {
         latLongs: [],
         coordinates: '',
         arrayLength: '',
-        allLocations: [],
+        allLocations: []
     }
-
 },
-
     methods: {
         userInput() {
             this.chat('user', this.message);
+
             Api.post('/', {
                 context: context || {},
                 input: {
                     text: this.message || ""
                 }
             }).then(data=>{
-                context = data.context;
                 this.message= null;
+                context = data.context;
                 this.checkIntent(data.output.text.join('\n'), null);
             }).catch(error=>{
               console.log(error);
                 this.message= null;
             });
         },
+
 
          setPlace(place) {
           var self = this;
@@ -172,7 +171,6 @@ export default {
                     text: place.name || ""
                 }
           };
-
            this.chat('user', place.name, null);
           Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
@@ -208,7 +206,48 @@ export default {
             });
           
         },
-
+        setCurrentPlace(latitude,longitude) {
+          var self = this;
+          context.action = "fetch_location_lat_lng";
+          context.lat = latitude;
+          context.lng = longitude;
+          console.log(latitude, longitude);
+          let options = {
+              context: context || {},
+              
+          };
+          Api.post('/', options).then(data=>{
+            console.log('Result: ' , data);
+            console.log('Locations: ' , data.locations);
+            console.log('Options: ' , options);
+            for(var i=0; i < data.locations.length; i++){
+                this.latLongs.push({
+                'lat': data.locations[i].latitude,
+                'long': data.locations[i].longitude,
+                'address': data.locations[i].address,
+                'opening' : data.locations[i].opening,
+                'closing' : data.locations[i].closing,
+                
+                });
+            }
+            
+            this.arrayLength = data.locations.length;
+            if(this.arrayLength>0){
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
+            }
+            else{
+                this.checkIntent("Sorry, there are no branches near you.",  null);
+            }
+            console.log(this.arrayLength);
+            this.allLocations.push(this.latLongs);
+            this.latLongs = [];
+            
+          }).catch(error=>{
+            console.log(error);
+                this.message= null;
+            });
+          
+        },
         defaultButtons(message){
             console.log(message);
             this.chat('user', message);
@@ -227,9 +266,7 @@ export default {
               console.log(error);
               this.message= null;
             });
-
         },
-
         chat(sender, message, array){
             this.messages.push({
                 'sender' : sender,
@@ -237,37 +274,31 @@ export default {
                 'locations' : array,
             })
         },
-
         checkIntent(message, array){
             this.chat('robot', message, array);
             
         },
-
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.defaultButtons(this.message);
             // this.nearestBranches.push({'lat':latitude, 'long':longitude});
         },
-
         nearestAtm() {
             this.message="Find Nearest ATM"
             this.defaultButtons(this.message);
             // this.nearestAtms.push({'lat':latitude, 'long':longitude});
         },
-
         storeHours() {
             this.message="Bank Hours"
             this.defaultButtons(this.message);
         },
-
         cardInfo() {
             this.message="Credit Card Information"
             this.defaultButtons(this.message);
         },
-
         inputYes() {
             this.message="Use my current location"
-            this.userInput();
+            this.userInput(this.message);
             this.geoLocation();
         },
 
@@ -275,78 +306,18 @@ export default {
             this.message= place;
             this.userInput(this.message);
         },
-
-
         geoLocation() {
             var self = this;
+            var latitude, longitude;
             if(navigator.geolocation) {
-               navigator.geolocation.getCurrentPosition(
-                    displayLocationInfo,
-                    handleLocationError,
-                    addtoLocationArray,
-                    {enableHighAccuracy: true, maximumAge: 1500000, timeout: 0}
-                );
+               navigator.geolocation.getCurrentPosition(function(position){
+                self.position = position.coords;
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                self.setCurrentPlace(latitude, longitude);
 
-                function displayLocationInfo(position){
-                    self.position = position.coords;
-                      context.action = "fetch_location_lat_lng";
-                      context.lat = self.position.latitude;
-                      context.lng = self.position.longitude;
-                      let options = {
-                          context: context || {},
-                          input:  {
-                            text: "Use my current location",
-                        }
-
-                      };
-                        console.log(position);
-                        Api.post('/', options).then(data=>{
-                        console.log('Result: ' , data);
-                        console.log('Locations: ' , data.locations);
-                        console.log('Options: ' , options);
-                        for(var i=0; i < data.locations.length; i++){
-                            self.latLongs.push({
-                            'lat': data.locations[i].latitude,
-                            'long': data.locations[i].longitude,
-                            'address': data.locations[i].address,
-                            'opening' : data.locations[i].opening,
-                            'closing' : data.locations[i].closing,
-                            
-                            });
-                        }
-                                              
-                        self.arrayLength = data.locations.length;
-                        if(self.arrayLength>0){
-                            self.checkIntent(data.output.text.join('\n'),  self.latLongs);
-                        }
-                        else{
-                            self.checkIntent("Sorry, there are no branches near you.",  null);
-                        }
-
-                        self.latLongs = [];
-                        
-                      }).catch(error=>{
-                        console.log(error);
-                            self.message= null;
-                        });
-                    
-                }
-
-                function handleLocationError(error) {
-                    switch (error.code) {
-                        case 3:
-                            displayLocationInfo({ coords: { longitude: 33.631839, latitude: 27.380583 } });
-                            navigator.geolocation.getCurrentPosition(displayLocationInfo, handleLocationError);
-                            break;
-                    }
-                }
-
-                function addtoLocationArray(position){
-                    self.latLongs.push({
-                        'lat': position.latitude,
-                        'long': position.longitude,
-                    })
-                }
+              })
+            
             }
         },   
     },
@@ -367,7 +338,6 @@ export default {
         });
     },
 }
-
 </script>
 
 
@@ -376,7 +346,6 @@ export default {
  <style>
  @import '../css/style.css';
  @import '../css/style.scss';
-
 .google-map {
   width: 800px;
   height: 600px;
@@ -385,5 +354,3 @@ export default {
 }
     
     </style>
-
-
