@@ -1,4 +1,7 @@
+const TAG = '[ATM]';
 const db = require('../../../Common/Services/Database');
+const err = require('../../Common/services/Errors');
+const logger = require('../../Common/services/Logger');
 
 const TABLE_NAME = 'atm';
 const PARAMS = 'PARAMS';
@@ -12,6 +15,7 @@ const TABLE_COLUMNS = {
 };
 
 module.exports.getNearestATM = (lat, long) => {
+    const ACTION = '[getNearestATM]';
     console.log(`[${new Date()}][MODEL - ${TABLE_NAME}].getNearestATM [${PARAMS}]`, JSON.stringify({
         latitude: lat,
         longitude: long
@@ -27,12 +31,13 @@ module.exports.getNearestATM = (lat, long) => {
                 radians(?)) + 
                 sin(radians(?)) * 
                 sin(radians(latitude)))
-             ) AS distance FROM ${TABLE_NAME} HAVING distance < 25 ORDER BY distance
+             ) AS distance FROM ${TABLE_NAME} HAVING distance < 15 ORDER BY distance LIMIT 3;
         `;
         db.execute(sql,[lat, long, lat]).then(rows=>{
             resolve(JSON.parse(JSON.stringify(rows)));
         }).catch(error=>{
-            reject(error);
+            logger.log('error', TAG + ACTION, error);
+            reject(err.raise('INTERNAL_SERVER_ERROR', error));
         });
     });
 };
