@@ -283,18 +283,21 @@ export default {
                navigator.geolocation.getCurrentPosition(
                     displayLocationInfo,
                     handleLocationError,
+                    addtoLocationArray,
                     {enableHighAccuracy: true, maximumAge: 1500000, timeout: 0}
                 );
 
                 function displayLocationInfo(position){
                     self.position = position.coords;
+                    
+                    console.log(self.position.latitude, self.position.longitude);
                       context.action = "fetch_location_lat_lng";
                       context.lat = self.position.latitude;
                       context.lng = self.position.longitude;
                       let options = {
                           context: context || {},
                           input:  {
-                            text: self.message,
+                            text: "Use my current location",
                         }
 
                       };
@@ -302,6 +305,7 @@ export default {
                         Api.post('/', options).then(data=>{
                         console.log('Result: ' , data);
                         console.log('Locations: ' , data.locations);
+                        console.log('Options: ' , options);
                         for(var i=0; i < data.locations.length; i++){
                             self.latLongs.push({
                             'lat': data.locations[i].latitude,
@@ -320,6 +324,7 @@ export default {
                         else{
                             self.checkIntent("Sorry, there are no branches near you.",  null);
                         }
+                        console.log(self.arrayLength);
                         self.latLongs = [];
                         
                       }).catch(error=>{
@@ -338,7 +343,12 @@ export default {
                     }
                 }
 
-
+                function addtoLocationArray(position){
+                    self.latLongs.push({
+                        'lat': position.latitude,
+                        'long': position.longitude,
+                    })
+                }
             }
         },   
     },
