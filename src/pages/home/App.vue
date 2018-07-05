@@ -289,8 +289,6 @@ export default {
 
                 function displayLocationInfo(position){
                     self.position = position.coords;
-                    
-                    console.log(self.position.latitude, self.position.longitude);
                       context.action = "fetch_location_lat_lng";
                       context.lat = self.position.latitude;
                       context.lng = self.position.longitude;
@@ -324,7 +322,7 @@ export default {
                         else{
                             self.checkIntent("Sorry, there are no branches near you.",  null);
                         }
-                        console.log(self.arrayLength);
+
                         self.latLongs = [];
                         
                       }).catch(error=>{
