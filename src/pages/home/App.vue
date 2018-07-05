@@ -137,7 +137,7 @@ export default {
         latLongs: [],
         coordinates: '',
         arrayLength: '',
-        allLocations: [],
+        allLocations: []
     }
 
 },
@@ -174,6 +174,51 @@ export default {
           };
 
            this.chat('user', place.name, null);
+          Api.post('/', options).then(data=>{
+            console.log('Result: ' , data);
+            console.log('Locations: ' , data.locations);
+            console.log('Options: ' , options);
+            for(var i=0; i < data.locations.length; i++){
+                this.latLongs.push({
+                'lat': data.locations[i].latitude,
+                'long': data.locations[i].longitude,
+                'address': data.locations[i].address,
+                'opening' : data.locations[i].opening,
+                'closing' : data.locations[i].closing,
+                
+                });
+            }
+           
+            this.checkIntent(data.output.text.join('\n'),  null);
+            
+            this.arrayLength = data.locations.length;
+            if(this.arrayLength>0){
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
+            }
+            else{
+                this.checkIntent("Sorry, there are no branches near you.",  null);
+            }
+            console.log(this.arrayLength);
+            this.allLocations.push(this.latLongs);
+            this.latLongs = [];
+            
+          }).catch(error=>{
+            console.log(error);
+                this.message= null;
+            });
+          
+        },
+
+        setCurrentPlace(latitude,longitude) {
+          var self = this;
+          context.action = "fetch_location_lat_lng";
+          context.lat = latitude;
+          context.lng = longitude;
+          let options = {
+              context: context || {},
+              
+          };
+
           Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
             console.log('Locations: ' , data.locations);
@@ -283,7 +328,6 @@ export default {
                navigator.geolocation.getCurrentPosition(
                     displayLocationInfo,
                     handleLocationError,
-                    addtoLocationArray,
                     {enableHighAccuracy: true, maximumAge: 1500000, timeout: 0}
                 );
 
@@ -291,8 +335,7 @@ export default {
                     self.position = position.coords;
                     latitude = position.latitude;
                     longitude = position.longitude;
-                    addtoLocationArray(self.position);
-                    
+                    self.setCurrentPlace(self.position.latitude,self.position.longitude);
                 }
 
                 function handleLocationError(error) {
@@ -302,13 +345,6 @@ export default {
                             navigator.geolocation.getCurrentPosition(displayLocationInfo, handleLocationError);
                             break;
                     }
-                }
-
-                function addtoLocationArray(position){
-                    self.latLongs.push({
-                        'lat': position.latitude,
-                        'long': position.longitude,
-                    })
                 }
             }
         },   
