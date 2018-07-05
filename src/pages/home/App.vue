@@ -121,7 +121,7 @@ import Api from '../../lib/Api';
 //import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
 
-let longitude, latitude = 0;
+let longitude = 0, latitude = 0;
 let context = undefined;
 let currentPlace = undefined;
 export default {
@@ -246,13 +246,13 @@ export default {
         nearestBranch() {
             this.message="Find Nearest Branch"
             this.defaultButtons(this.message);
-            this.nearestBranches.push({'lat':latitude, 'long':longitude});
+            // this.nearestBranches.push({'lat':latitude, 'long':longitude});
         },
 
         nearestAtm() {
             this.message="Find Nearest ATM"
             this.defaultButtons(this.message);
-            this.nearestAtms.push({'lat':latitude, 'long':longitude});
+            // this.nearestAtms.push({'lat':latitude, 'long':longitude});
         },
 
         storeHours() {

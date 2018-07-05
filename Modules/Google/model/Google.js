@@ -1,5 +1,5 @@
 "use strict";
-const Ajax = require('../../../Common/Services/Ajax');
+const Ajax = require('../../Common/service/Ajax');
 
 module.exports.geocoordinate = (input) => {
   return new Promise((resolve, reject)=>{
