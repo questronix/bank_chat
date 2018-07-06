@@ -1,5 +1,6 @@
 const AssistantV1 = require('watson-developer-cloud/assistant/v1');
 const Errors = require('../../Common/service/Errors');
+const action = require('./ActionLoader');
 
 const conversation = new AssistantV1({
   iam_apikey: process.env.CHAT_API_KEY,
@@ -29,7 +30,7 @@ module.exports.sendMessage = (context, input) => {
         result.data = elem;
         resolve(result);
       }).catch(error => {
-        let error = Errors.raise('WATSON_SEND_MSG_ERROR');
+        //let error = Errors.raise('WATSON_SEND_MSG_ERROR');
         error.error.details = {
           response: response,
           error: error
