@@ -56,9 +56,9 @@
                             </div>
                         </div> 
 
-                        <div class="chat-card-bundle custom-scroll" v-else-if="message.locations !== null">
+                        <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
                             
-                            <div class="chat-card"  v-for="(coordinates, index) in message.locations" :key="index">
+                            <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
 
                                 <div class="card-content">
                                     
@@ -133,7 +133,7 @@ export default {
         latLongs: [],
         coordinates: '',
         arrayLength: '',
-        allLocations: []
+        alldata: []
     }
 },
     methods: {
@@ -171,7 +171,7 @@ export default {
            this.chat('user', place.name, null);
           Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
-            console.log('Locations: ' , data.data);
+            console.log('data: ' , data.data);
             console.log('Options: ' , options);
             for(var i=0; i < data.data.length; i++){
                 this.latLongs.push({
@@ -202,41 +202,43 @@ export default {
 
         setCurrentPlace(latitude,longitude) {
           var self = this;
-          if(this.action === "check_location_to_use"){
-            context.action = "fetch_location_lat_lng"
+           self.chat('user', self.message, null)
+          if(this.action=== "WhichLocation"){
+            context.action = "GetNearestBranchLatLong";
           }else{
-           context.action = "fetch_atm_location_lat_lng";}
+            context.action = "GetNearestATMLatLong"
+          }
           context.lat = latitude;
           context.lng = longitude;
           let options = {
               context: context || {},
-              
+              input:{
+                text: self.message
+              }
           };
+         
           Api.post('/', options).then(data=>{
-            console.log('Result: ' , data);
-            console.log('Locations: ' , data.locations);
-            console.log('Options: ' , options);
-            for(var i=0; i < data.locations.length; i++){
+            for(var i=0; i < data.data.length; i++){
                 this.latLongs.push({
-                'lat': data.locations[i].latitude,
-                'long': data.locations[i].longitude,
-                'address': data.locations[i].address,
-                'opening' : data.locations[i].opening,
-                'closing' : data.locations[i].closing,
+                'lat': data.data[i].latitude,
+                'long': data.data[i].longitude,
+                'address': data.data[i].address,
+                'opening' : data.data[i].opening,
+                'closing' : data.data[i].closing,
                 
                 });
             }
             
-            this.arrayLength = data.locations.length;
+            this.arrayLength = data.data.length;
             this.action = data.context.action;
+            this.chat('robot', data.output.text.join('\n'), null);
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs);
             }
             else{
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
-            console.log(this.arrayLength);
-            this.allLocations.push(this.latLongs);
+            this.alldata.push(this.latLongs);
             this.latLongs = [];
             
           }).catch(error=>{
@@ -246,7 +248,6 @@ export default {
           
         },
         defaultButtons(message){
-            console.log(message);
             this.chat('user', message);
             Api.post('/', {
                 context: context || {},
@@ -254,7 +255,6 @@ export default {
                     text: message || ""
                 }
             }).then(data=>{
-              console.log(data);
                 context = data.context;
                 this.message= null;
                 this.checkIntent(data.output.text.join('\n'), null);
@@ -268,7 +268,7 @@ export default {
             this.messages.push({
                 'sender' : sender,
                 'text' : message,
-                'locations' : array,
+                'data' : array,
             })
         },
         checkIntent(message, array){
@@ -295,7 +295,6 @@ export default {
         },
         inputYes() {
             this.message="Use my current location"
-            this.userInput(this.message);
             this.geoLocation();
         },
 
@@ -325,7 +324,6 @@ export default {
                 text: ""
             }
         }).then(data=>{
-            console.log(data);
             context = data.context;
             this.message= null;
             this.checkIntent(data.output.text.join('\n'), null);
