@@ -1,11 +1,10 @@
-const ConversationV1 = require('watson-developer-cloud/conversation/v1');
-const action = require('./ActionLoader');
+const AssistantV1 = require('watson-developer-cloud/assistant/v1');
+const Errors = require('../../Common/service/Errors');
 
-const conversation = new ConversationV1({
-  username: process.env.CHAT_USER,
-  password: process.env.CHAT_PASS,
-  url: process.env.CHAT_URL,
-  version_date: process.env.CHAT_VERSION
+const conversation = new AssistantV1({
+  iam_apikey: process.env.CHAT_API_KEY,
+  version: process.env.CHAT_VERSION,
+  url: process.env.CHAT_URL
 });
 
 module.exports.sendMessage = (context, input) => {
@@ -17,7 +16,7 @@ module.exports.sendMessage = (context, input) => {
   };
 
   return new Promise((resolve, reject) => {
-    conversation.message(payload, (err, data) => {
+    conversation.message(payload, (err, result, response) => {
       if (err) {
         reject({
           status: err.code || 500,
@@ -25,15 +24,17 @@ module.exports.sendMessage = (context, input) => {
         });
       }
 
-      let actions = action.load(data.context, context);
+      let actions = action.load(result.context, context);
       actions.then(elem => {
-        data.data = elem;
-        resolve(data);
+        result.data = elem;
+        resolve(result);
       }).catch(error => {
-        reject({
-          status: 500,
+        let error = Errors.raise('WATSON_SEND_MSG_ERROR');
+        error.error.details = {
+          response: response,
           error: error
-        });
+        };
+        reject(error);
       });
     });
   });
