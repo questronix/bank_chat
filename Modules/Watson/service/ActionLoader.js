@@ -5,6 +5,13 @@
  * @param {string} package_name 
  */
 module.exports.load = (package_name, context)=>{
-  let action = require('../action/' + package_name)
-  return action.run(context);
+  if(package_name["action"] !== ""){
+    if(typeof package_name["action"] !== 'undefined'){
+      try{
+        let action = require('../action/' + package_name["action"]);
+        return action.run(context);
+      }catch(e){}
+    }
+  }
+  return Promise.resolve(null);
 };

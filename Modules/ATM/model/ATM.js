@@ -16,7 +16,7 @@ const TABLE_COLUMNS = {
 
 module.exports.getNearestATM = (lat, long) => {
     const ACTION = '[getNearestATM]';
-    console.log(`[${new Date()}][MODEL - ${TABLE_NAME}].getNearestATM [${PARAMS}]`, JSON.stringify({
+    logger.log(`[${new Date()}][MODEL - ${TABLE_NAME}].getNearestATM [${PARAMS}]`, JSON.stringify({
         latitude: lat,
         longitude: long
     }));

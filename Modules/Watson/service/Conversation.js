@@ -8,7 +8,7 @@ const conversation = new ConversationV1({
   version_date: process.env.CHAT_VERSION
 });
 
-module.exports.sendMessage = (context, input)=> {
+module.exports.sendMessage = (context, input) => {
 
   const payload = {
     workspace_id: process.env.CHAT_ID,
@@ -16,53 +16,25 @@ module.exports.sendMessage = (context, input)=> {
     input: input || {}
   };
 
-  return new Promise((resolve, reject)=>{
-    conversation.message(payload, (err, data)=>{
+  return new Promise((resolve, reject) => {
+    conversation.message(payload, (err, data) => {
       if (err) {
         reject({
           status: err.code || 500,
           error: err
         });
       }
-      if(data.context.action === "fetch_location_lat_lng"){
-        let branch = action.load('nearestBranchLocation', context);
-        branch.then(locs=>{
-          data.locations = locs;
-          resolve(data);
-        }).catch(error=>{
-          reject({
-            status: 500,
-            error: error
-          });
+
+      let actions = action.load(data.context, context);
+      actions.then(elem => {
+        data.data = elem;
+        resolve(data);
+      }).catch(error => {
+        reject({
+          status: 500,
+          error: error
         });
-      }
-      else if(data.context.action === "fetch_atm_location_lat_lng"){
-        let atm = action.load('nearestATMLocation', context);
-        atm.then(locs=>{
-          data.locations = locs;
-          resolve(data);
-        }).catch(error=>{
-          reject({
-            status: 500,
-            error: error
-          });
-        });
-      }
-      else if(data.context.action === "fetch_bank_hours"){
-        let branch = action.load('checkBankHours', context);
-        branch.then(locs=>{
-          data.locations = locs;
-          resolve(data);
-        }).catch(error=>{
-          reject({
-            status: 500,
-            error: error
-          });
-        });
-      }
-      else{
-        resolve(data); 
-      }
+      });
     });
   });
 };

@@ -174,22 +174,22 @@ export default {
            this.chat('user', place.name, null);
           Api.post('/', options).then(data=>{
             console.log('Result: ' , data);
-            console.log('Locations: ' , data.locations);
+            console.log('Locations: ' , data.data);
             console.log('Options: ' , options);
-            for(var i=0; i < data.locations.length; i++){
+            for(var i=0; i < data.data.length; i++){
                 this.latLongs.push({
-                'lat': data.locations[i].latitude,
-                'long': data.locations[i].longitude,
-                'address': data.locations[i].address,
-                'opening' : data.locations[i].opening,
-                'closing' : data.locations[i].closing,
+                'lat': data.data[i].latitude,
+                'long': data.data[i].longitude,
+                'address': data.data[i].address,
+                'opening' : data.data[i].opening,
+                'closing' : data.data[i].closing,
                 
                 });
             }
            
             this.checkIntent(data.output.text.join('\n'),  null);
             
-            this.arrayLength = data.locations.length;
+            this.arrayLength = data.data.length;
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs);
             }
