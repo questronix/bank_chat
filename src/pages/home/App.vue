@@ -192,6 +192,19 @@ export default {
             else{
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
+
+            Api.post('/', {
+                context: context || {},
+                input: {
+                    text: ""
+                }
+            }).then(data=>{
+                context = data.context;
+                this.message= null;
+            }).catch(error=>{
+                console.log(error);
+                this.message= null;
+            });
             this.latLongs = [];
           }).catch(error=>{
             console.log(error);
@@ -238,6 +251,20 @@ export default {
             else{
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
+            
+            Api.post('/', {
+                context: context || {},
+                input: {
+                    text: ""
+                }
+            }).then(data=>{
+                context = data.context;
+                this.message= null;
+            }).catch(error=>{
+                console.log(error);
+                this.message= null;
+            });
+        
             this.alldata.push(this.latLongs);
             this.latLongs = [];
             
@@ -315,7 +342,7 @@ export default {
               })
             
             }
-        },   
+        },
     },
     mounted: function() {
         Api.post('/', {
