@@ -214,13 +214,17 @@ input {
         border-radius: 50%;
         float: left; }
       .wrapper .messages .left-chat .chat-bg, .wrapper .messages .left-chat .chat-card-bundle .chat-card, .wrapper .chat-card-bundle .messages .left-chat .chat-card {
-        max-width: 100%;
+        max-width: 80%;
         min-width: auto;
         background-color: #f1f1f1;
         padding: 15px;
         border-radius: 20px;
         margin-left: 10px;
         word-break: break-all; }
+
+        .credCards{
+          max-width: 80%;
+        }
     .wrapper .messages .right-chat {
       min-width: auto;
       margin: 10px;
