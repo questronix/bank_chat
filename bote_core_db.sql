@@ -259,6 +259,18 @@ CREATE TABLE `credcards` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+# Dump of Deposit Reqs
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `depositreqs`;
+
+CREATE TABLE `depositreqs` (
+  `id` varchar(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `definition` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 # Dump of Branch
 # ------------------------------------------------------------
@@ -290,6 +302,11 @@ USE bote_core_db;
 #CC data
 #-----------------------------------------------------------------------
 INSERT INTO credcards (id, name, definition) VALUES ('prime', 'CHINA BANK PRIME MASTERCARD', 'The China Bank Prime Mastercard is your “go-to” card. It’s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.');
+
+#Desposit Reqs data
+#-----------------------------------------------------------------------
+INSERT INTO depositreqs (id, name, definition) VALUES ('accnum', 'Account Number', 'The 10-digit blabla used to blabla.');
+
 
 
 #Branch data
