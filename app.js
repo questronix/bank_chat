@@ -6,6 +6,11 @@ const express = require('express');
 //session
 const session = require('express-session');
 
+const cfenv = require('cfenv');
+const appEnv = cfenv.getAppEnv();
+
+console.log(appEnv);
+
 //service for logging
 const logger = require('./Modules/Common/service/Logger');
 
@@ -48,6 +53,8 @@ app.use(function (req, res, next) {
 
 // serve the files out of ./public as our main files
 app.use('/static', express.static(path.join(__dirname, 'dist/public/')));
+app.use('/static/img', express.static(path.join(__dirname, 'src/assets')));
+app.use('/static/css', express.static(path.join(__dirname, 'src/css')));
 
 const db = require('./Modules/Common/service/Database');
 let mysqlConnect = db.connect();
