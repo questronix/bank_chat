@@ -52,7 +52,7 @@ app.use(function (req, res, next) {
 });
 
 // serve the files out of ./public as our main files
-app.use('/static', express.static(path.join(__dirname, 'dist/public/')));
+app.use('/static', express.static(path.join(__dirname, 'dist')));
 app.use('/static/img', express.static(path.join(__dirname, 'src/assets')));
 app.use('/static/css', express.static(path.join(__dirname, 'src/css')));
 
