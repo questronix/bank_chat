@@ -256,6 +256,7 @@ CREATE TABLE `credcards` (
   `id` varchar(11) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `definition` varchar(250) DEFAULT NULL,
+  `imgSrc` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -301,7 +302,12 @@ CREATE TABLE `branch` (
 USE bote_core_db;
 #CC data
 #-----------------------------------------------------------------------
-INSERT INTO credcards (id, name, definition) VALUES ('prime', 'CHINA BANK PRIME MASTERCARD', 'The China Bank Prime Mastercard is your “go-to” card. It’s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.');
+INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('prime', 'CHINA BANK PRIME MASTERCARD', 'The China Bank Prime Mastercard is your “go-to” card. It’s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.', 'https://www.chinabank.ph/images/cc/2016/Prime.png');
+
+INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('platinum', 'CHINA BANK PLATINUM MASTERCARD', 'The China Bank Platinum Mastercard is your ultimate privilege lifestyle card. It’s the card that allows you to experience life’s wonderful surprises, to shop, dine, and travel to your heart’s content.', 'https://www.chinabank.ph/images/cc/2016/Platinum.png');
+
+INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('world', 'CHINA BANK WORLD MASTERCARD', 'The China Bank World Mastercard is the card that gives you world-class privileges, taking luxury to a whole new level. It provides the widest spectrum and access to highly exclusive lifestyle and events, global perks, VIP lounges, and your own personal concierge – The China Bank World Concierge.', 'https://www.chinabank.ph/images/cc/2016/World.png');
+
 
 #Desposit Reqs data
 #-----------------------------------------------------------------------

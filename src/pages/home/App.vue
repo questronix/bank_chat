@@ -3,7 +3,6 @@
 <div class="wrapper chat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-
             <div id="modal" class="animated modal">
                 <div class="modal-content animated">
                     <span class="modal-close fa fa-times"></span>
@@ -16,9 +15,8 @@
                         <a href="#" class="btn btn-green-minimal modal-close">
                             Okay
                         </a>
-                    </div>
-                </div>
-            </div>
+                    </div></div></div>
+
             <div class="nav">
                 <span class="fa fa-arrow-left"></span>
                 <p>Chassi</p>
@@ -26,7 +24,6 @@
              </div>
             <div class="messages custom-scroll " >
                 <div class="message " v-for="(message, index) in messages" :key="index">
-                    
                     <div class="right-chat" v-if="message.sender === 'user'">
                         <div class="chat-bg">
                             <p>{{ message.text }}</p>
@@ -51,35 +48,26 @@
                                          <gmap-autocomplete class="card-btn"
                                             @place_changed="setPlace"> 
                                             </gmap-autocomplete>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
+                                    </div></div></div></div> 
 
-                        <div v-else-if="message.text === 'China Bank is introducing three (3) core card types namely, Prime, Platinum, and World under the license of Mastercard.'">            
-                           <div class="chat-bg">
+                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes'">            
+                            <div class="chat-bg">
                                 {{ message.text }}
-                            </div>                                
-                                    
+                            </div>     
+                            <br>                           
                             <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
+                                <div class="chat-card" v-for="(card, index) in creditCards" :key="index">
                                     <div class="card-content">
-                                        <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                        <img id="map" v-bind:src="`${card.imgSrc}`">
                                         <br><br>
-                                         <span class="style-green">  Open </span>
-                                        
+                                         <span class="style-green">  {{ card.name }} </span> 
+                                         <br><br> 
+                                         <p class="card-text">
+                                            {{ card.definition }}
+                                        </p>    
                                  <br><br>
-                                 <div class="card-btn-bundle">
-                                    <div class="card-btn">
-                                       {{ coordinates.address }} <br>
-                                       Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
-
-                                    </div>
+                                 </div>
                                 </div>
-                            </div>
-                           
-
-                            </div>
                             </div>
                         </div>
 
@@ -111,15 +99,11 @@
                         </div>
 
                         <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
-                            
                             <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
-
                                 <div class="card-content">
-                                    
                                     <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
                                     <br><br>
                                      <span class="style-green">  Open </span>
-                                    
                                  <br><br>
                                  <div class="card-btn-bundle">
                                     <div class="card-btn">
@@ -202,12 +186,15 @@ export default {
             }).then(data=>{
                 this.message= null;
                 context = data.context;
-                this.checkIntent(data.output.text.join('\n'), null);
                 this.action = data.context.action;
+                console.log(this.action);
+                this.checkIntent(data.output.text.join('\n'), null, this.action);
+                if(this.action === 'getCreditCardTypes'){this.getDatabase();}
             }).catch(error=>{
               console.log(error);
                 this.message= null;
             });
+            
         },
 
         forLocation(options){
@@ -298,10 +285,11 @@ export default {
                 'data' : array,
                 'currentAction' : contextAction,
             })
+           
         },
 
-        checkIntent(message, array){
-            this.chat('robot', message, array);
+        checkIntent(message, array, action){
+            this.chat('robot', message, array, action);
             
         },
         nearestBranch() {
@@ -343,6 +331,29 @@ export default {
             
             }
         },
+
+        getDatabase(){
+        context.action = this.action;
+        let options = {
+            context: context || {},
+          };
+
+         Api.post('/', options).then(data=>{
+            for(var i=0; i < data.data.length; i++){
+                this.creditCards.push({
+                'id': data.data[i].id,
+                'name': data.data[i].name,
+                'definition': data.data[i].definition,
+                'imgSrc' : data.data[i].imgSrc,
+                });
+            }
+        }).catch(error=>{
+            console.log(error);
+                this.message= null;
+        });
+
+        this.creditCards = [];
+        },
     },
     mounted: function() {
         Api.post('/', {
@@ -358,6 +369,8 @@ export default {
             console.log(error);
             this.message= null;
         });
+
+        
     },
 }
 </script>
