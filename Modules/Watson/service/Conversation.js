@@ -1,5 +1,7 @@
+const TAG = '[Conversation]';
 const AssistantV1 = require('watson-developer-cloud/assistant/v1');
-const Errors = require('../../Common/service/Errors');
+const err = require('../../Common/service/Errors');
+const logger = require('../../Common/service/Logger');
 const action = require('./ActionLoader');
 
 const conversation = new AssistantV1({
@@ -9,7 +11,7 @@ const conversation = new AssistantV1({
 });
 
 module.exports.sendMessage = (context, input) => {
-
+  const ACTION = '[sendMessage]';
   const payload = {
     workspace_id: process.env.CHAT_ID,
     context: context || {},

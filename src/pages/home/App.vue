@@ -193,7 +193,6 @@ export default {
             });
             
         },
-
         forLocation(options){
         Api.post('/', options).then(data=>{
             for(var i=0; i < data.data.length; i++){
@@ -216,7 +215,6 @@ export default {
                 this.checkIntent("Sorry, there are no branches near you.",  null);
             }
             this.latLongs = [];
-
           }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -234,8 +232,6 @@ export default {
             this.message= null;
         });
         },
-
-
         setPlace(place) {
           var self = this;
           self.position = place.geometry.location;
@@ -252,7 +248,6 @@ export default {
         this.forLocation(options);  
           
         },
-
         setCurrentPlace(latitude,longitude) {
           var self = this;
            self.chat('user', self.message, null)
@@ -273,8 +268,6 @@ export default {
         this.forLocation(options);
           
         },
-
-
         chat(sender, message, array, contextAction){
             this.messages.push({
                 'sender' : sender,
@@ -284,7 +277,6 @@ export default {
             })
            
         },
-
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
             
@@ -309,7 +301,6 @@ export default {
             this.message="Use my current location"
             this.geoLocation();
         },
-
         inputNo() {
             this.message= place;
             this.userInput(this.message);
@@ -323,18 +314,15 @@ export default {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
                 self.setCurrentPlace(latitude, longitude);
-
               })
             
             }
         },
-
         getDatabase(){
         context.action = this.action;
         let options = {
             context: context || {},
           };
-
          Api.post('/', options).then(data=>{
             for(var i=0; i < data.data.length; i++){
                 this.creditCards.push({
@@ -348,7 +336,6 @@ export default {
             console.log(error);
                 this.message= null;
         });
-
         this.creditCards = [];
         },
     },
@@ -366,7 +353,6 @@ export default {
             console.log(error);
             this.message= null;
         });
-
         
     },
 }
@@ -378,6 +364,5 @@ export default {
  <style>
  @import '../css/style.css';
  @import '../css/style.scss';
-
     
     </style>
