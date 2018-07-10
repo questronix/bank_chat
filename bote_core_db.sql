@@ -253,9 +253,9 @@ CREATE TABLE `atm` (
 DROP TABLE IF EXISTS `credcards`;
 
 CREATE TABLE `credcards` (
-  `id` varchar(11) DEFAULT NULL,
+  `id` varchar(11),
   `name` varchar(100) DEFAULT NULL,
-  `definition` varchar(250) DEFAULT NULL,
+  `definition` varchar(400) DEFAULT NULL,
   `imgSrc` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -266,9 +266,10 @@ CREATE TABLE `credcards` (
 DROP TABLE IF EXISTS `depositreqs`;
 
 CREATE TABLE `depositreqs` (
-  `id` varchar(11) DEFAULT NULL,
+  `id` varchar(11) ,
   `name` varchar(100) DEFAULT NULL,
   `definition` varchar(250) DEFAULT NULL,
+  `imgSrc` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -299,7 +300,7 @@ CREATE TABLE `branch` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */; 
 
-USE bote_core_db;
+
 #CC data
 #-----------------------------------------------------------------------
 INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('prime', 'CHINA BANK PRIME MASTERCARD', 'The China Bank Prime Mastercard is your “go-to” card. It’s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.', 'https://www.chinabank.ph/images/cc/2016/Prime.png');
@@ -311,7 +312,9 @@ INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('world', 'CHINA BAN
 
 #Desposit Reqs data
 #-----------------------------------------------------------------------
-INSERT INTO depositreqs (id, name, definition) VALUES ('accnum', 'Account Number', 'The 10-digit blabla used to blabla.');
+INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('accnum', 'Account Number', 'The 10-digit number of the account you are going to deposit funds to.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
+INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('accname', 'Account Name', 'The name of the account you are going to deposit funds to. This may be a person\'s name or the name of the company or business', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
+INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('cash', 'Cash to be deposited', 'You must have your cash on hand and make sure to know the exact amount you are going to deposit.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
 
 
 
