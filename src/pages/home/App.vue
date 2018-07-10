@@ -362,7 +362,7 @@ export default {
 
 
  <style>
- @import '../css/style.css';
- @import '../css/style.scss';
+ @import '../../css/style.css';
+ @import '../../css/style.scss';
     
     </style>
