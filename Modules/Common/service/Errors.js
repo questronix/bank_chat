@@ -44,6 +44,20 @@ module.exports = {
 					message: 'There is problem in fetching data in conversation.'
 				}
 			},
+			GOOGLE_NO_GEOCODE: {
+				status: 400,
+				error: {
+					code: -8,
+					message: 'We can\'t geocode the location you provide.'
+				}
+			},
+			STATUS_PROBLEM: {
+				status: 400,
+				error: {
+					code: -9,
+					message: 'There is no atm location to add status to.'
+				}
+			}
 		};
 		return errors[tag];
 	},
