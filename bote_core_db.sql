@@ -247,6 +247,18 @@ CREATE TABLE `atm` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+# Dump of CC
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `credcards`;
+
+CREATE TABLE `credcards` (
+  `id` varchar(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `definition` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 # Dump of Branch
 # ------------------------------------------------------------
@@ -275,8 +287,15 @@ CREATE TABLE `branch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */; 
 
 USE bote_core_db;
+#CC data
+#-----------------------------------------------------------------------
+INSERT INTO credcards (id, name, definition) VALUES ('prime', 'CHINA BANK PRIME MASTERCARD', 'The China Bank Prime Mastercard is your “go-to” card. It’s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.');
+
+
 #Branch data
 #-----------------------------------------------------------------------
+
+
 INSERT INTO branch (id, name, address, latitude, longitude, contactno, opening, closing) VALUES (72,'ABS-CBN','West Wing G/F ELJ Communication Center, ABS-CBN Broadcast Center Sgt. Esguerra St. South Triangle, Quezon City (ATM: On-site)', 14.639863, 121.035255, '(02)929 7264; (02)929 1825; Mobile: 0917 8270294', '9 AM', '4:30 PM');
 INSERT INTO branch (id, name, address, latitude, longitude, contactno, opening, closing) VALUES (73,'Acropolis','171 Bridgeview Bldg., E. Rodriguez Jr. Ave, Bagumbayan, Quezon City (ATM: On-site)', 14.611772, 121.075268, '(02)655 5796; (02)438 9332; Mobile: 0917 8270549', '9 AM', '4:30 PM');
 INSERT INTO branch (id, name, address, latitude, longitude, contactno, opening, closing) VALUES (254,'ADB Avenue','Ground floor Unit 101 AIC Burgundy Empire Tower, ADB Ave., Ortigas Pasig City (ATM: On-site)', 14.589859, 121.060941, '(02)633-1097; (02)622-1031; (02)571-8394; Mobile: 0917-8275992', '9 AM', '4:30 PM');
