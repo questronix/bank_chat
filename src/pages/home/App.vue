@@ -56,6 +56,33 @@
                             </div>
                         </div> 
 
+                        <div v-else-if="message.text === 'China Bank is introducing three (3) core card types namely, Prime, Platinum, and World under the license of Mastercard.'">            
+                           <div class="chat-bg">
+                                {{ message.text }}
+                            </div>                                
+                                    
+                            <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
+                                    <div class="card-content">
+                                        <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                        <br><br>
+                                         <span class="style-green">  Open </span>
+                                        
+                                 <br><br>
+                                 <div class="card-btn-bundle">
+                                    <div class="card-btn">
+                                       {{ coordinates.address }} <br>
+                                       Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
+
+                                    </div>
+                                </div>
+                            </div>
+                           
+
+                            </div>
+                            </div>
+                        </div>
+
                         <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
                             
                             <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
@@ -133,7 +160,8 @@ export default {
         latLongs: [],
         coordinates: '',
         arrayLength: '',
-        alldata: []
+        alldata: [],
+        creditCards: [],
     }
 },
     methods: {
@@ -143,20 +171,61 @@ export default {
             Api.post('/', {
                 context: context || {},
                 input: {
-                    text: this.message || ""
-                }
+                    text: this.message || ""}
             }).then(data=>{
                 this.message= null;
                 context = data.context;
                 this.checkIntent(data.output.text.join('\n'), null);
+                this.action = data.context.action;
             }).catch(error=>{
               console.log(error);
                 this.message= null;
             });
         },
 
+        forLocation(options){
+        Api.post('/', options).then(data=>{
+            for(var i=0; i < data.data.length; i++){
+                this.latLongs.push({
+                'lat': data.data[i].latitude,
+                'long': data.data[i].longitude,
+                'address': data.data[i].address,
+                'opening' : data.data[i].opening,
+                'closing' : data.data[i].closing,
+                });
+            }
+            
+            this.arrayLength = data.data.length;
+            this.action = data.context.action;
+            this.chat('robot', data.output.text.join('\n'), null, this.action);
+            if(this.arrayLength>0){
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
+            }
+            else{
+                this.checkIntent("Sorry, there are no branches near you.",  null);
+            }
+            this.latLongs = [];
 
-         setPlace(place) {
+          }).catch(error=>{
+            console.log(error);
+                this.message= null;
+        });
+        Api.post('/', {
+        context: context || {},
+            input: {
+                text: ""
+            }
+        }).then(data=>{
+            context = data.context;
+            this.message= null;
+        }).catch(error=>{
+            console.log(error);
+            this.message= null;
+        });
+        },
+
+
+        setPlace(place) {
           var self = this;
           self.position = place.geometry.location;
           context.action = this.action;
@@ -168,48 +237,8 @@ export default {
                     text: place.name || ""
                 }
           };
-           this.chat('user', place.name, null);
-          Api.post('/', options).then(data=>{
-            console.log('Result: ' , data);
-            console.log('data: ' , data.data);
-            console.log('Options: ' , options);
-            for(var i=0; i < data.data.length; i++){
-                this.latLongs.push({
-                'lat': data.data[i].latitude,
-                'long': data.data[i].longitude,
-                'address': data.data[i].address,
-                'opening' : data.data[i].opening,
-                'closing' : data.data[i].closing,
-                
-                });
-            }
-           
-            this.checkIntent(data.output.text.join('\n'),  null);
-            this.arrayLength = data.data.length;
-            if(this.arrayLength>0){
-                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
-            }
-            else{
-                this.checkIntent("Sorry, there are no branches near you.",  null);
-            }
-
-            Api.post('/', {
-                context: context || {},
-                input: {
-                    text: ""
-                }
-            }).then(data=>{
-                context = data.context;
-                this.message= null;
-            }).catch(error=>{
-                console.log(error);
-                this.message= null;
-            });
-            this.latLongs = [];
-          }).catch(error=>{
-            console.log(error);
-                this.message= null;
-            });
+        this.chat('user', place.name, null);
+        this.forLocation(options);  
           
         },
 
@@ -230,87 +259,31 @@ export default {
               }
           };
          
-          Api.post('/', options).then(data=>{
-            for(var i=0; i < data.data.length; i++){
-                this.latLongs.push({
-                'lat': data.data[i].latitude,
-                'long': data.data[i].longitude,
-                'address': data.data[i].address,
-                'opening' : data.data[i].opening,
-                'closing' : data.data[i].closing,
-                
-                });
-            }
-            
-            this.arrayLength = data.data.length;
-            this.action = data.context.action;
-            this.chat('robot', data.output.text.join('\n'), null);
-            if(this.arrayLength>0){
-                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
-            }
-            else{
-                this.checkIntent("Sorry, there are no branches near you.",  null);
-            }
-            
-            Api.post('/', {
-                context: context || {},
-                input: {
-                    text: ""
-                }
-            }).then(data=>{
-                context = data.context;
-                this.message= null;
-            }).catch(error=>{
-                console.log(error);
-                this.message= null;
-            });
-        
-            this.alldata.push(this.latLongs);
-            this.latLongs = [];
-            
-          }).catch(error=>{
-            console.log(error);
-                this.message= null;
-            });
+        this.forLocation(options);
           
         },
-        defaultButtons(message){
-            this.chat('user', message);
-            Api.post('/', {
-                context: context || {},
-                input: {
-                    text: message || ""
-                }
-            }).then(data=>{
-                context = data.context;
-                this.message= null;
-                this.checkIntent(data.output.text.join('\n'), null);
-                this.action = data.context.action;
-            }).catch(error=>{
-              console.log(error);
-              this.message= null;
-            });
-        },
-        chat(sender, message, array){
+
+
+        chat(sender, message, array, contextAction){
             this.messages.push({
                 'sender' : sender,
                 'text' : message,
                 'data' : array,
+                'currentAction' : contextAction,
             })
         },
+
         checkIntent(message, array){
             this.chat('robot', message, array);
             
         },
         nearestBranch() {
             this.message="Find Nearest Branch"
-            this.defaultButtons(this.message);
-            // this.nearestBranches.push({'lat':latitude, 'long':longitude});
+            this.userInput();
         },
         nearestAtm() {
             this.message="Find Nearest ATM"
-            this.defaultButtons(this.message);
-            // this.nearestAtms.push({'lat':latitude, 'long':longitude});
+            this.userInput();
         },
         storeHours() {
             this.message="Bank Hours"
@@ -368,11 +341,6 @@ export default {
  <style>
  @import '../css/style.css';
  @import '../css/style.scss';
-.google-map {
-  width: 800px;
-  height: 600px;
-  margin: 0 auto;
-  background: gray;
-}
+
     
     </style>
