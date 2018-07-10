@@ -71,7 +71,7 @@
                             </div>
                         </div>
 
-                        <div v-else-if="message.text === 'You can do an over-the-counter deposit into a China Bank account even without your own account. You must have the following prepared before going to your preferred China Bank branch:'">            
+                        <div v-else-if="message.action === 'getDepositReqsList'">            
                            <div class="chat-bg">
                                 {{ message.text }}
                             </div>                                
@@ -79,9 +79,6 @@
                             <div class="chat-card-bundle custom-scroll">    
                                 <div class="chat-card"  v-for="(requirements, index) in message.data" :key="index">
                                     <div class="card-content">
-                                        <!-- <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
-                                        <br><br>
-                                         <span class="style-green">  Open </span> -->
                                         {{ requirements.name }}
                                  <br><br>
                                  <div class="card-btn-bundle">
