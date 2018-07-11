@@ -50,28 +50,28 @@
                                             </gmap-autocomplete>
                                     </div></div></div></div> 
 
-                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes' || 'specificCard'">            
                             <div class="chat-bg">
                                 {{ message.text }}
                             </div>     
                             <br>                           
                             <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card" v-for="(card, index) in creditCards" :key="index">
+                                <div class="chat-card" v-for="(card, index) in message.data" :key="index">
                                     <div class="card-content">
-                                        <img id="map" v-bind:src="`${card.imgSrc}`">
+                                        <img id="credCard" v-bind:src="`${card.imgSrc}`">
                                         <br><br>
                                          <span class="style-green">  {{ card.name }} </span> 
                                          <br><br> 
                                          <p class="card-text">
                                             {{ card.definition }}
                                         </p>    
-                                 <br><br>
+                                 
                                  </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="credCards" v-else-if="message.currentAction === 'getDepositReqsList'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'getDepositReqsList'">  
                            <div class="chat-bg">
                                 {{ message.text }}
                             </div>                                
@@ -92,12 +92,17 @@
                             </div>
                         </div>
 
-                        <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
-                            <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
-                                <div class="card-content">
-                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || 'getNearestATMLatLong' || 'getNearestBranchPlace' || 'getNearestATMPlace'">            
+                            <div class="chat-bg">
+                                {{ message.text }}
+                            </div>     
+                            <br>                           
+                            <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
+                                    <div class="card-content">
+                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
                                     <br><br>
-                                     <span class="style-green">  Open </span>
+                                     <span class="style-green"> Open </span>
                                  <br><br>
                                  <div class="card-btn-bundle">
                                     <div class="card-btn">
@@ -107,10 +112,10 @@
                                     </div>
                                 </div>
                             </div>
-                           
-
+                                </div>
                             </div>
                         </div>
+
                      
                         <div v-else class="chat-bg">
                             <p>{{ message.text }}</p>
@@ -168,6 +173,8 @@ export default {
         alldata: [],
         creditCards: [],
         depositReqs: [],
+        value: '',
+
     }
 },
     methods: {
@@ -179,12 +186,17 @@ export default {
                 input: {
                     text: this.message || ""}
             }).then(data=>{
-                this.message= null;
                 context = data.context;
                 this.action = data.context.action;
-                console.log(this.action);
-                this.checkIntent(data.output.text.join('\n'), null, this.action);
-                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase();}
+                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase(this.action);}
+                else if(this.action === 'specificCard'){
+                    console.log("da");
+                    this.value = data.entities[0].value;
+                    this.getDatabase(this.action);
+                }else{
+                    this.checkIntent(data.output.text.join('\n'), null, this.action);
+                }
+                this.message= null;
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -205,12 +217,11 @@ export default {
             
             this.arrayLength = data.data.length;
             this.action = data.context.action;
-            this.chat('robot', data.output.text.join('\n'), null, this.action);
             if(this.arrayLength>0){
-                this.checkIntent(data.output.text.join('\n'),  this.latLongs);
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs, this.action);
             }
             else{
-                this.checkIntent("Sorry, there are no branches near you.",  null);
+                this.checkIntent("Sorry, there are no branches near you.",  null, this.action);
             }
             this.latLongs = [];
           }).catch(error=>{
@@ -247,8 +258,8 @@ export default {
           
         },
         setCurrentPlace(latitude,longitude) {
-          var self = this;
-           self.chat('user', self.message, null)
+        var self = this;
+        self.chat('user', self.message, null)
           if(this.action=== "WhichLocation"){
             context.action = "GetNearestBranchLatLong";
           }else{
@@ -316,10 +327,14 @@ export default {
             
             }
         },
-        getDatabase(){
-        context.action = this.action;
+        getDatabase(action){
+        context.action = action;
+        if(context.action === 'specificCard'){context.value = this.value;}
         let options = {
             context: context || {},
+            input:{
+                text: this.message
+              }
           };
          Api.post('/', options).then(data=>{
             if(context.action === 'getCreditCardTypes'){
@@ -339,15 +354,16 @@ export default {
                     'definition': data.data[i].definition,
                     });
                 }
-                console.log('depositReqs test');
             }
-            
+
+            this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
+            this.creditCards = [];
         }).catch(error=>{
             console.log(error);
                 this.message= null;
         });
-        this.creditCards = [];
-        this.depositReqs = [];
+        this.depositReqs = [];      
+        this.value = null;
         },
     },
     mounted: function() {
