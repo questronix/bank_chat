@@ -77,7 +77,7 @@
                             </div>                                
                                     
                               <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card" v-for="(requirements, index) in depositReqs" :key="index">
+                                <div class="chat-card" v-for="(requirements, index) in message.data" :key="index">
                                     <div class="card-content">
                                         <img id="map" v-bind:src="`${requirements.imgSrc}`">
                                         <br><br>
@@ -98,7 +98,7 @@
                                 {{ message.text }}
                             </div>                                
                             
-                            <div class="chat-card" v-for="(commands, index) in chassiCommands" :key="index">
+                            <div class="chat-card" v-for="(commands, index) in message.data" :key="index">
                               <div class="chat-card-bundle custom-scroll">    
                                 <div class="card-content">
                                     <div class="card-btn-bundle">
@@ -117,38 +117,36 @@
                                 <div class="card-content">
                                     <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
 
-                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || 'getNearestATMLatLong' || 'getNearestBranchPlace' || 'getNearestATMPlace'">            
-                            <div class="chat-bg">
-                                {{ message.text }}
-                            </div>     
-                            <br>                           
-                            <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
-                                    <div class="card-content">
-                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
-
-                                    <br><br>
-                                     <span class="style-green"> Open </span>
-                                 <br><br>
-                                 <div class="card-btn-bundle">
-                                    <div class="card-btn">
-                                       {{ coordinates.address }} <br>
-                                       Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
-
+                                    <div class="credCards" v-if="message.currentAction === 'getNearestBranchLatLong' || 'getNearestATMLatLong' || 'getNearestBranchPlace' || 'getNearestATMPlace'">            
+                                        <div class="chat-bg">
+                                            {{ message.text }}
+                                        </div>     
+                                        <br>                           
+                                        <div class="chat-card-bundle custom-scroll">    
+                                            <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
+                                                <div class="card-content">
+                                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                                <br><br>
+                                                    <span class="style-green"> Open </span>
+                                                <br><br>
+                                                    <div class="card-btn-bundle">
+                                                        <div class="card-btn">
+                                                            {{ coordinates.address }} <br>
+                                                            Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                                </div>
-                            </div>
-                        </div>
 
                      
                         <div v-else class="chat-bg">
                             <p>{{ message.text }}</p>
                         </div>
                     </div> 
-           
-                    
+           </div></div>
+                    </div>
                 </div> 
 
             </div>
