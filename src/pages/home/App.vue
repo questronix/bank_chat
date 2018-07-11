@@ -92,6 +92,31 @@
                             </div>
                         </div>
 
+
+                        <div class="credCards" v-else-if="message.currentAction === 'getChassiCommands'">            
+                           <div class="chat-bg">
+                                {{ message.text }}
+                            </div>                                
+                            
+                            <div class="chat-card" v-for="(commands, index) in chassiCommands" :key="index">
+                              <div class="chat-card-bundle custom-scroll">    
+                                <div class="card-content">
+                                    <div class="card-btn-bundle">
+                                        <a href="#" class="card-btn" v-on:click="inputYes">
+                                            {{ commands.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
+                            <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
+                                <div class="card-content">
+                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+
                          <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || 'getNearestATMLatLong' || 'getNearestBranchPlace' || 'getNearestATMPlace'">            
                             <div class="chat-bg">
                                 {{ message.text }}
@@ -101,6 +126,7 @@
                                 <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
                                     <div class="card-content">
                                     <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+
                                     <br><br>
                                      <span class="style-green"> Open </span>
                                  <br><br>
@@ -173,8 +199,8 @@ export default {
         alldata: [],
         creditCards: [],
         depositReqs: [],
+        chassiCommands: [],
         value: '',
-
     }
 },
     methods: {
@@ -188,7 +214,8 @@ export default {
             }).then(data=>{
                 context = data.context;
                 this.action = data.context.action;
-                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase(this.action);}
+
+                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase(this.action);}
                 else if(this.action === 'specificCard'){
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
@@ -196,6 +223,7 @@ export default {
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
                 }
                 this.message= null;
+
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -354,6 +382,13 @@ export default {
                     'definition': data.data[i].definition,
                     });
                 }
+            }else if(context.action === 'getChassiCommands'){
+                for(var i=0; i < data.data.length; i++){
+                    this.chassiCommands.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    });
+                }
             }
 
             this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
@@ -362,7 +397,10 @@ export default {
             console.log(error);
                 this.message= null;
         });
-        this.depositReqs = [];      
+
+        this.creditCards = [];
+        this.depositReqs = [];
+        this.chassiCommands = [];     
         this.value = null;
         },
     },

@@ -292,6 +292,34 @@ CREATE TABLE `depositreqs` (
 
 
 
+# Dump of chassi commands
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `chassicommands`;
+
+CREATE TABLE `chassicommands` (
+  `id` varchar(20),
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+# Dump of Branch
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `branch`;
+
+CREATE TABLE `branch` (
+  `id` int(11) unsigned NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `address` varchar(250) DEFAULT NULL,
+  `latitude` double DEFAULT '0',
+  `longitude` double DEFAULT '0',
+  `contactno` varchar(250) DEFAULT NULL,
+  `opening` varchar(15) DEFAULT NULL,
+  `closing` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
@@ -314,6 +342,14 @@ INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('world', 'CHINA BAN
 #Desposit Reqs data
 #-----------------------------------------------------------------------
 INSERT INTO depositreqs (id, name, definition) VALUES ('accnum', 'Account Number', 'The 10-digit blabla used to blabla.');;
+
+#chassi commands data
+#-----------------------------------------------------------------------
+INSERT INTO chassicommands (id, name) VALUES ('atmnear', 'Find Nearest ATM');
+INSERT INTO chassicommands (id, name) VALUES ('branchnear', 'Find Nearest Branch');
+INSERT INTO chassicommands (id, name) VALUES ('forex', 'View current Foreign Exchange');
+INSERT INTO chassicommands (id, name) VALUES ('customerservice', 'Customer Service Hotline');
+INSERT INTO chassicommands (id, name) VALUES ('infochassi', 'Who is Chassi?');
 
 
 
