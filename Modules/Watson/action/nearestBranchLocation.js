@@ -15,7 +15,7 @@ module.exports.run = (payload)=>{
   return new Promise((resolve, reject)=>{
     async.auto({
       geocode : function(callback){
-        gc.geocoordinate(payload.input.text).then(data=>{
+        gc.geoCoordinate(payload.input.text).then(data=>{
           callback(null, data);
         }).catch(error=>{
           logger.log('error', TAG + ACTION, error);

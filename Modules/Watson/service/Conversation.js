@@ -17,7 +17,7 @@ module.exports.sendMessage = (context, input) => {
     context: context || {},
     input: input || {}
   };
-
+  logger.log('info', `${TAG}${ACTION}$ - payload`, payload );
   return new Promise((resolve, reject) => {
     conversation.message(payload, (err, result, response) => {
       if (err) {
@@ -32,12 +32,12 @@ module.exports.sendMessage = (context, input) => {
         result.data = elem;
         resolve(result);
       }).catch(error => {
-        //let error = Errors.raise('WATSON_SEND_MSG_ERROR');
-        error.error.details = {
+        let err = Errors.raise('WATSON_SEND_MSG_ERROR');
+        err.error.details = {
           response: response,
           error: error
         };
-        reject(error);
+        reject(err);
       });
     });
   });
