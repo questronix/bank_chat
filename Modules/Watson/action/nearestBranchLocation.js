@@ -6,16 +6,16 @@ const logger = require('../../Common/service/Logger');
 const async = require('async');
 
 
-module.exports.run = (context)=>{
+module.exports.run = (payload)=>{
   
   const ACTION = '[run]';
-  logger.log('info', TAG + ACTION, context);
+  logger.log('info', TAG + ACTION, payload);
   //return branch.getByNearestLatLong(context.lat, context.lng);
   
   return new Promise((resolve, reject)=>{
     async.auto({
       geocode : function(callback){
-        gc.geocoordinate(context.input).then(data=>{
+        gc.geocoordinate(payload.input.text).then(data=>{
           callback(null, data);
         }).catch(error=>{
           logger.log('error', TAG + ACTION, error);

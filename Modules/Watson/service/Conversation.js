@@ -27,7 +27,7 @@ module.exports.sendMessage = (context, input) => {
         });
       }
 
-      let actions = action.load(result.context, context);
+      let actions = action.load(result.context, payload);
       actions.then(elem => {
         result.data = elem;
         resolve(result);
