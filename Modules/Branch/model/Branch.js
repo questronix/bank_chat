@@ -7,12 +7,13 @@ const TABLE_NAME = 'branch';
 const PARAMS = 'PARAMS';
 
 const TABLE_COLUMNS = {
-    id: 'int',
     name: 'string',
     address: 'string',
+    contactno: 'string',
+    faxno: 'string',
     latitude: 'double',
     longitude: 'double',
-    contactno: 'string',
+    icon: 'string',
     opening: 'string',
     closing: 'string'
 

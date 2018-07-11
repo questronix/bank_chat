@@ -7,11 +7,11 @@ const TABLE_NAME = 'atm';
 const PARAMS = 'PARAMS';
 
 const TABLE_COLUMNS = {
-    id: 'int',
     name: 'string',
     address: 'string',
     latitude: 'double',
-    longitude: 'double'
+    longitude: 'double',
+    icon: 'string'
 };
 
 module.exports.getNearestATM = (lat, long) => {
