@@ -13,6 +13,7 @@ module.exports.geocoordinate = (input) => {
       url:`https://maps.googleapis.com/maps/api/geocode/json?address=${input},+Philippines&key=AIzaSyCk5psk14jw6Rto0wmf5B_i1K6z9TgClWA`
     });
     Ajax.get().then(data=>{
+      console.log(data);
       resolve(data);
     }).catch(error=>{
       logger.log('error', TAG + ACTION, error);
