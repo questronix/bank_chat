@@ -526,3 +526,8 @@ input {
     .wrapper .chat-card-bundle .chat-card .card-btn-bundle .card-btn:hover {
             background-color: #6cc27b;
             color: white; }
+
+    #credCard {
+      width: 250px;
+      height: 150px;
+    }
