@@ -274,6 +274,17 @@ CREATE TABLE `depositreqs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+# Dump of chassi commands
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `chassicommands`;
+
+CREATE TABLE `chassicommands` (
+  `id` varchar(20),
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 # Dump of Branch
 # ------------------------------------------------------------
 
@@ -315,6 +326,14 @@ INSERT INTO credcards (id, name, definition, imgSrc) VALUES ('world', 'CHINA BAN
 INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('accnum', 'Account Number', 'The 10-digit number of the account you are going to deposit funds to.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
 INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('accname', 'Account Name', 'The name of the account you are going to deposit funds to. This may be a person\'s name or the name of the company or business', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
 INSERT INTO depositreqs (id, name, definition, imgSrc) VALUES ('cash', 'Cash to be deposited', 'You must have your cash on hand and make sure to know the exact amount you are going to deposit.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
+
+#chassi commands data
+#-----------------------------------------------------------------------
+INSERT INTO chassicommands (id, name) VALUES ('atmnear', 'Find Nearest ATM');
+INSERT INTO chassicommands (id, name) VALUES ('branchnear', 'Find Nearest Branch');
+INSERT INTO chassicommands (id, name) VALUES ('forex', 'View current Foreign Exchange');
+INSERT INTO chassicommands (id, name) VALUES ('customerservice', 'Customer Service Hotline');
+INSERT INTO chassicommands (id, name) VALUES ('infochassi', 'Who is Chassi?');
 
 
 

@@ -92,6 +92,25 @@
                             </div>
                         </div>
 
+                        <div class="credCards" v-else-if="message.currentAction === 'getChassiCommands'">            
+                           <div class="chat-bg">
+                                {{ message.text }}
+                            </div>                                
+                            
+                            <div class="chat-card" v-for="(commands, index) in chassiCommands" :key="index">
+                              <div class="chat-card-bundle custom-scroll">    
+                                <div class="card-content">
+                                    <div class="card-btn-bundle">
+                                        <a href="#" class="card-btn" v-on:click="inputYes">
+                                            {{ commands.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                         <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
                             <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
                                 <div class="card-content">
@@ -168,6 +187,7 @@ export default {
         alldata: [],
         creditCards: [],
         depositReqs: [],
+        chassiCommands: [],
     }
 },
     methods: {
@@ -184,7 +204,7 @@ export default {
                 this.action = data.context.action;
                 console.log(this.action);
                 this.checkIntent(data.output.text.join('\n'), null, this.action);
-                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase();}
+                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase();}
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -339,7 +359,13 @@ export default {
                     'definition': data.data[i].definition,
                     });
                 }
-                console.log('depositReqs test');
+            }else if(context.action === 'getChassiCommands'){
+                for(var i=0; i < data.data.length; i++){
+                    this.chassiCommands.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    });
+                }
             }
             
         }).catch(error=>{
@@ -348,6 +374,7 @@ export default {
         });
         this.creditCards = [];
         this.depositReqs = [];
+        this.chassiCommands = [];
         },
     },
     mounted: function() {
