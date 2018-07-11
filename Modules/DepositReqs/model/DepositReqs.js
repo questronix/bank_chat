@@ -10,6 +10,7 @@ const TABLE_COLUMNS = {
     id: 'string',
     name: 'string',
     definition: 'string',
+    imgSrc: 'string',
 
 };
 

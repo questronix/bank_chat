@@ -71,27 +71,24 @@
                             </div>
                         </div>
 
-                        <div v-else-if="message.action === 'getDepositReqsList'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'getDepositReqsList'">            
                            <div class="chat-bg">
                                 {{ message.text }}
                             </div>                                
                                     
-                            <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card"  v-for="(requirements, index) in message.data" :key="index">
+                              <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card" v-for="(requirements, index) in depositReqs" :key="index">
                                     <div class="card-content">
-                                        {{ requirements.name }}
+                                        <img id="map" v-bind:src="`${requirements.imgSrc}`">
+                                        <br><br>
+                                         <span class="style-green">  {{ requirements.name }} </span> 
+                                         <br><br> 
+                                         <p class="card-text">
+                                            {{ requirements.definition }}
+                                        </p>    
                                  <br><br>
-                                 <div class="card-btn-bundle">
-                                    <div class="card-btn">
-                                        <br>
-                                      {{ requirements.definition }}
-
-                                    </div>
+                                 </div>
                                 </div>
-                            </div>
-                           
-
-                            </div>
                             </div>
                         </div>
 
@@ -170,6 +167,7 @@ export default {
         arrayLength: '',
         alldata: [],
         creditCards: [],
+        depositReqs: [],
     }
 },
     methods: {
@@ -186,7 +184,7 @@ export default {
                 this.action = data.context.action;
                 console.log(this.action);
                 this.checkIntent(data.output.text.join('\n'), null, this.action);
-                if(this.action === 'getCreditCardTypes'){this.getDatabase();}
+                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase();}
             }).catch(error=>{
               console.log(error);
                 this.message= null;
@@ -324,19 +322,32 @@ export default {
             context: context || {},
           };
          Api.post('/', options).then(data=>{
-            for(var i=0; i < data.data.length; i++){
-                this.creditCards.push({
-                'id': data.data[i].id,
-                'name': data.data[i].name,
-                'definition': data.data[i].definition,
-                'imgSrc' : data.data[i].imgSrc,
-                });
+            if(context.action === 'getCreditCardTypes'){
+                for(var i=0; i < data.data.length; i++){
+                    this.creditCards.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    'definition': data.data[i].definition,
+                    'imgSrc' : data.data[i].imgSrc,
+                    });
+                }
+            }else if(context.action === 'getDepositReqsList'){
+                for(var i=0; i < data.data.length; i++){
+                    this.depositReqs.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    'definition': data.data[i].definition,
+                    });
+                }
+                console.log('depositReqs test');
             }
+            
         }).catch(error=>{
             console.log(error);
                 this.message= null;
         });
         this.creditCards = [];
+        this.depositReqs = [];
         },
     },
     mounted: function() {
