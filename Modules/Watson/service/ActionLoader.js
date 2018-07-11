@@ -12,6 +12,7 @@ module.exports.load = (package_name, payload)=>{
     if(typeof package_name["action"] !== 'undefined'){
       try{
         let action = require('../action/' + package_name["action"]);
+        console.log(action);
         return action.run(payload);
       }catch(e){}
     }

@@ -27,7 +27,9 @@ router.post('/', (req, res, next)=>{
 
 router.get('/nearestBranch', (req, res, next)=>{
   watsonBranch.run({
-    input: req.query.input
+    input: {
+      text: req.query.input
+    }
   }).then(data=>{
     res.success(data);
   }).catch(error=>{
@@ -39,7 +41,9 @@ router.get('/nearestBranch', (req, res, next)=>{
 
 router.get('/nearestATM', (req, res, next)=>{
   watsonATM.run({
-    input: req.query.input
+    input: {
+      text : req.query.input
+    }
   }).then(data=>{
     res.success(data);
   }).catch(error=>{
