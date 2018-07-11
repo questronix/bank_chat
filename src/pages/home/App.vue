@@ -190,7 +190,6 @@ export default {
                 this.action = data.context.action;
                 if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList'){this.getDatabase(this.action);}
                 else if(this.action === 'specificCard'){
-                    console.log("da");
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
                 }else{
@@ -327,6 +326,7 @@ export default {
             
             }
         },
+
         getDatabase(action){
         context.action = action;
         if(context.action === 'specificCard'){context.value = this.value;}
@@ -337,7 +337,7 @@ export default {
               }
           };
          Api.post('/', options).then(data=>{
-            if(context.action === 'getCreditCardTypes'){
+            if(context.action === 'getCreditCardTypes' || 'specificCard'){
                 for(var i=0; i < data.data.length; i++){
                     this.creditCards.push({
                     'id': data.data[i].id,
