@@ -225,24 +225,33 @@ export default {
         forLocation(options){
         Api.post('/', options).then(data=>{
             for(var i=0; i < data.data.length; i++){
+                if(data.context.action === 'getNearestATMPlace'){
+                    if(data.data[i].status === 0){this.latLongs.push({
+                    'lat': data.data[i].latitude,
+                    'long': data.data[i].longitude,
+                    'address': data.data[i].address,
+                    'opening' : data.data[i].opening,
+                    'closing' : data.data[i].closing,
+                });}
+                }else{
                 this.latLongs.push({
                 'lat': data.data[i].latitude,
                 'long': data.data[i].longitude,
                 'address': data.data[i].address,
                 'opening' : data.data[i].opening,
                 'closing' : data.data[i].closing,
-                });
+                });}
+                
             }
             
             this.arrayLength = data.data.length;
             this.action = data.context.action;
-            console.log("DATA: ", data);
-            console.log("OPTIONS: ", options);
+            console.log("DATA", data);
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs, this.action);
             }
             else{
-                this.checkIntent("Sorry, there are no branches near you.",  null, this.action);
+                this.checkIntent("Sorry, there are no branches / available ATMs near your location.",  null, this.action);
             }
             this.latLongs = [];
              Api.post('/', {
@@ -292,7 +301,6 @@ export default {
           }
           context.lat = latitude;
           context.lng = longitude;
-          console.log(context.lat, context.lng);
           let options = {
               context: context || {},
               input:{
@@ -309,9 +317,7 @@ export default {
                 'text' : message,
                 'data' : array,
                 'currentAction' : contextAction,
-            })
-            console.log(sender, message, array, contextAction);
-           
+            })           
         },
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
