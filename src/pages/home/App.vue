@@ -48,9 +48,34 @@
                                          <gmap-autocomplete class="card-btn"
                                             @place_changed="setPlace"> 
                                             </gmap-autocomplete>
-                                    </div></div></div></div> 
+                                    </div></div></div>
+                        </div> 
 
-                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes' || 'specificCard'">            
+                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace'">            
+                                        <div class="chat-bg">
+                                            {{ message.text }}
+                                        </div>     
+                                        <br>                           
+                                        <div class="chat-card-bundle custom-scroll">    
+                                            <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
+                                                <div class="card-content">
+                                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                                <br><br>
+                                                    <span class="style-green"> Open </span>
+                                                <br><br>
+                                                    <div class="card-btn-bundle">
+                                                        <div class="card-btn">
+                                                            {{ coordinates.address }} <br>
+                                                            Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes'">            
                             <div class="chat-bg">
                                 {{ message.text }}
                             </div>     
@@ -112,44 +137,14 @@
                     </div>
 
 
-                        <div class="chat-card-bundle custom-scroll" v-else-if="message.data !== null">
-                            <div class="chat-card"  v-for="(coordinates, index) in message.data" :key="index">
-                                <div class="card-content">
-                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=280x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
-
-                                    <div class="credCards" v-if="message.currentAction === 'getNearestBranchLatLong' || 'getNearestATMLatLong' || 'getNearestBranchPlace' || 'getNearestATMPlace'">            
-                                        <div class="chat-bg">
-                                            {{ message.text }}
-                                        </div>     
-                                        <br>                           
-                                        <div class="chat-card-bundle custom-scroll">    
-                                            <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
-                                                <div class="card-content">
-                                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
-                                                <br><br>
-                                                    <span class="style-green"> Open </span>
-                                                <br><br>
-                                                    <div class="card-btn-bundle">
-                                                        <div class="card-btn">
-                                                            {{ coordinates.address }} <br>
-                                                            Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                   
                      
                         <div v-else class="chat-bg">
                             <p>{{ message.text }}</p>
                         </div>
                     </div> 
            </div></div>
-                    </div>
-                </div> 
-
-            </div>
+      
    
             <div class="chat-suggestions custom-scroll">
                 <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
@@ -175,266 +170,264 @@
 </template>
 
 <script>
-import Api from "../../lib/Api";
+import Api from '../../lib/Api';
 //import cardOne from '../../components/cardOne';
-import imgCard from "../../components/imgCard";
-let longitude = 0,
-  latitude = 0;
+import imgCard from '../../components/imgCard';
+let longitude = 0, latitude = 0;
 let context = undefined;
 let currentPlace = undefined;
 export default {
-  name: "google-map",
-  props: ["name"],
-  data() {
+    name: 'google-map',
+    props: ['name'],
+    data(){
     return {
-      chatBot: "ChatBot",
-      user: "You",
-      messages: [],
-      message: "",
-      context: {},
-      latLongs: [],
-      coordinates: "",
-      arrayLength: "",
-      alldata: [],
-      creditCards: [],
-      depositReqs: [],
-      chassiCommands: [],
-      value: ""
-    };
-  },
-  methods: {
-    //normal inputs only, typed by the user.
-    userInput() {
-      this.chat("user", this.message, null, this.context);
-      Api.post("/", {
-        context: context || {},
-        input: {
-          text: this.message || ""
-        }
-      })
-        .then(data => {
-          context = data.context;
-          this.context = data.context;
-          let action = this.context.action || '';
-
-          if (
-            [
-              "getCreditCardTypes",
-              "getDepositReqsList",
-              "getChassiCommands"
-            ].indexOf(action) > -1
-          ) {
-            this.getDatabase(action);
-          } else if (action === "specificCard") {
-            this.value = data.entities[0].value;
-            this.getDatabase(action);
-          } else {
-            this.checkIntent(data.output.text.join("\n"), null, context);
-          }
-          this.message = null;
-        })
-        .catch(error => {
-          console.log(error);
-          this.message = null;
-        });
-    },
-    forLocation(options) {
-      Api.post("/", options)
-        .then(data => {
-          for (var i = 0; i < data.data.length; i++) {
-            this.latLongs.push({
-              lat: data.data[i].latitude,
-              long: data.data[i].longitude,
-              address: data.data[i].address,
-              opening: data.data[i].opening,
-              closing: data.data[i].closing
-            });
-          }
-
-          this.arrayLength = data.data.length;
-          this.context = data.context;
-          if (this.arrayLength > 0) {
-            this.checkIntent(
-              data.output.text.join("\n"),
-              this.latLongs,
-              this.context
-            );
-          } else {
-            this.checkIntent(
-              "Sorry, there are no branches near you.",
-              null,
-              this.context
-            );
-          }
-          this.latLongs = [];
-        })
-        .catch(error => {
-          console.log(error);
-          this.message = null;
-        });
-    },
-    setPlace(place) {
-      var self = this;
-      self.position = place.geometry.location;
-      let context = this.context;
-      let options = {
-        context: context || {},
-        input: {
-          text: place.name || ""
-        }
-      };
-      this.chat("user", place.name, null, this.context);
-      this.forLocation(options);
-    },
-    setCurrentPlace(latitude, longitude) {
-      var self = this;
-      self.chat("user", self.message, null);
-      let context = this.context;
-      if (context.action === "WhichLocation") {
-        context.action = "GetNearestBranchLatLong";
-      } else {
-        context.action = "GetNearestATMLatLong";
-      }
-      let options = {
-        context: context || {},
-        input: {
-          text: self.message
-        }
-      };
-
-      this.forLocation(options);
-    },
-    chat(sender, message, array, context) {
-      this.messages.push({
-        sender: sender,
-        text: message,
-        data: array,
-        context: context
-      });
-    },
-    checkIntent(message, array, context) {
-      this.chat("robot", message, array, context);
-    },
-    nearestBranch() {
-      this.message = "Find Nearest Branch";
-      this.userInput();
-    },
-    nearestAtm() {
-      this.message = "Find Nearest ATM";
-      this.userInput();
-    },
-    howToDeposit() {
-      this.message = "How To Deposit";
-      this.userInput();
-    },
-    cardInfo() {
-      this.message = "Credit Card Information";
-      this.userInput();
-    },
-    inputYes() {
-      this.message = "Use my current location";
-      this.geoLocation();
-    },
-    inputNo() {
-      this.message = place;
-      this.userInput(this.message);
-    },
-    geoLocation() {
-      var self = this;
-      var latitude, longitude;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          self.position = position.coords;
-          latitude = position.coords.latitude;
-          longitude = position.coords.longitude;
-          self.setCurrentPlace(latitude, longitude);
-        });
-      }
-    },
-
-    getDatabase(action) {
-      this.context.action = action;
-      if (this.context.action === "specificCard") {
-        this.context.value = this.value;
-      }
-      let options = {
-        context: this.context || {},
-        input: {
-          text: this.message
-        }
-      };
-      Api.post("/", options)
-        .then(data => {
-          this.context = data.context;
-          if (this.context.action === "getCreditCardTypes" || "specificCard") {
-            for (var i = 0; i < data.data.length; i++) {
-              this.creditCards.push({
-                id: data.data[i].id,
-                name: data.data[i].name,
-                definition: data.data[i].definition,
-                imgSrc: data.data[i].imgSrc
-              });
-            }
-          } else if (this.context.action === "getDepositReqsList") {
-            for (var i = 0; i < data.data.length; i++) {
-              this.depositReqs.push({
-                id: data.data[i].id,
-                name: data.data[i].name,
-                definition: data.data[i].definition
-              });
-            }
-          } else if (this.context.action === "getChassiCommands") {
-            for (var i = 0; i < data.data.length; i++) {
-              this.chassiCommands.push({
-                id: data.data[i].id,
-                name: data.data[i].name
-              });
-            }
-          }
-
-          this.chat(
-            "robot",
-            data.output.text.join("\n"),
-            this.creditCards,
-            this.context
-          );
-          this.creditCards = [];
-        })
-        .catch(error => {
-          console.log(error);
-          this.message = null;
-        });
-
-      this.creditCards = [];
-      this.depositReqs = [];
-      this.chassiCommands = [];
-      this.value = null;
+        chatBot: 'ChatBot',
+        user: 'You',
+        messages: [],
+        message: '',
+        action: '',
+        latLongs: [],
+        coordinates: '',
+        arrayLength: '',
+        alldata: [],
+        creditCards: [],
+        depositReqs: [],
+        chassiCommands: [],
+        value: '',
     }
-  },
-  mounted: function() {
-    Api.post("/", {
-      context: context || {},
-      input: {
-        text: ""
-      }
-    })
-    .then(data => {
-        this.context = data.context;
-        this.message = null;
-        this.checkIntent(data.output.text.join("\n"), null, this.context);
-    })
-    .catch(error => {
-        console.log(error);
-        this.message = null;
-    });
-  }
-};
+},
+    methods: {
+        //normal inputs only, typed by the user.
+        userInput() {
+            this.chat('user', this.message);
+            Api.post('/', {
+                context: context || {},
+                input: {
+                    text: this.message || ""}
+            }).then(data=>{
+                context = data.context;
+                this.action = data.context.action;
+                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase(this.action);}
+                else if(this.action === 'specificCard'){
+                    this.value = data.entities[0].value;
+                    this.getDatabase(this.action);
+                }else{
+                    this.checkIntent(data.output.text.join('\n'), null, this.action);
+                }
+                this.message= null;
+
+            }).catch(error=>{
+              console.log(error);
+                this.message= null;
+            });
+            
+        },
+        forLocation(options){
+        Api.post('/', options).then(data=>{
+            for(var i=0; i < data.data.length; i++){
+                this.latLongs.push({
+                'lat': data.data[i].latitude,
+                'long': data.data[i].longitude,
+                'address': data.data[i].address,
+                'opening' : data.data[i].opening,
+                'closing' : data.data[i].closing,
+                });
+            }
+            
+            this.arrayLength = data.data.length;
+            this.action = data.context.action;
+            console.log("DATA: ", data);
+            console.log("OPTIONS: ", options);
+            if(this.arrayLength>0){
+                this.checkIntent(data.output.text.join('\n'),  this.latLongs, this.action);
+            }
+            else{
+                this.checkIntent("Sorry, there are no branches near you.",  null, this.action);
+            }
+            this.latLongs = [];
+             Api.post('/', {
+            context: context || {},
+            input: {
+                text: ""
+            }
+        }).then(data=>{
+            context = data.context;
+            this.message= null;
+        }).catch(error=>{
+            console.log(error);
+            this.message= null;
+        });
+          }).catch(error=>{
+            console.log(error);
+                this.message= null;
+        });
+       
+        },
+        setPlace(place) {
+          var self = this;
+          self.position = place.geometry.location;
+          if(this.action === "whichLocation"){
+            context.action = "getNearestBranchPlace";
+          }else{
+            context.action = "getNearestATMPlace"
+          }
+          let options = {
+              context: context || {},
+              input:  {
+                    text: place.name || ""
+                }
+            
+          };
+        this.chat('user', place.name, null);
+        this.forLocation(options);  
+          
+        },
+        setCurrentPlace(latitude,longitude) {
+        var self = this;
+        self.chat('user', self.message, null)
+          if(this.action === "whichLocation"){
+            context.action = "getNearestBranchLatLong";
+          }else{
+            context.action = "getNearestATMLatLong"
+          }
+          context.lat = latitude;
+          context.lng = longitude;
+          
+          let options = {
+              context: context || {},
+              input:{
+                text: self.message
+              }
+          };
+         
+        this.forLocation(options);
+          
+        },
+        chat(sender, message, array, contextAction){
+            this.messages.push({
+                'sender' : sender,
+                'text' : message,
+                'data' : array,
+                'currentAction' : contextAction,
+            })
+            console.log(sender, message, array, contextAction);
+           
+        },
+        checkIntent(message, array, action){
+            this.chat('robot', message, array, action);
+            
+        },
+        nearestBranch() {
+            this.message="Find Nearest Branch"
+            this.userInput();
+        },
+        nearestAtm() {
+            this.message="Find Nearest ATM"
+            this.userInput();
+        },
+        howToDeposit() {
+            this.message="How To Deposit"
+            this.userInput();
+        },
+        cardInfo() {
+            this.message="Credit Card Information"
+            this.userInput();
+        },
+        inputYes() {
+            this.message="Use my current location"
+            this.geoLocation();
+        },
+        inputNo() {
+            this.message= place;
+            this.userInput(this.message);
+        },
+        geoLocation() {
+            var self = this;
+            var latitude, longitude;
+            if(navigator.geolocation) {
+               navigator.geolocation.getCurrentPosition(function(position){
+                self.position = position.coords;
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                self.setCurrentPlace(latitude, longitude);
+              })
+            
+            }
+        },
+
+        getDatabase(action){
+        context.action = action;
+        if(context.action === 'specificCard'){context.value = this.value;}
+        let options = {
+            context: context || {},
+            input:{
+                text: this.message
+              }
+          };
+         Api.post('/', options).then(data=>{
+            if(context.action === 'getCreditCardTypes' || 'specificCard'){
+                for(var i=0; i < data.data.length; i++){
+                    this.creditCards.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    'definition': data.data[i].definition,
+                    'imgSrc' : data.data[i].imgSrc,
+                    });
+                }
+            }else if(context.action === 'getDepositReqsList'){
+                for(var i=0; i < data.data.length; i++){
+                    this.depositReqs.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    'definition': data.data[i].definition,
+                    });
+                }
+            }else if(context.action === 'getChassiCommands'){
+                for(var i=0; i < data.data.length; i++){
+                    this.chassiCommands.push({
+                    'id': data.data[i].id,
+                    'name': data.data[i].name,
+                    });
+                }
+            }
+
+            this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
+            this.creditCards = [];
+        }).catch(error=>{
+            console.log(error);
+                this.message= null;
+        });
+
+        this.creditCards = [];
+        this.depositReqs = [];
+        this.chassiCommands = [];     
+        this.value = null;
+        },
+    },
+    mounted: function() {
+        Api.post('/', {
+        context: context || {},
+            input: {
+                text: ""
+            }
+        }).then(data=>{
+            context = data.context;
+            this.message= null;
+            this.checkIntent(data.output.text.join('\n'), null);
+        }).catch(error=>{
+            console.log(error);
+            this.message= null;
+        });
+        
+    },
+}
 </script>
 
 
 
 
  <style>
-@import "../../css/style.css";
-@import "../../css/style.scss";
-</style>
+ @import '../../css/style.css';
+ @import '../../css/style.scss';
+    
+    </style>

@@ -3,8 +3,7 @@ const express = require('express');
 const router = express.Router();
 const watson = require('./service/Conversation');
 const Errors = require('../Common/service/Errors');
-const watsonBranch = require('./action/nearestBranchLocation');
-const watsonATM = require('./action/nearestATMLocation');
+
 
 router.get('/', (req, res, next)=>{
   //initial context
@@ -25,32 +24,5 @@ router.post('/', (req, res, next)=>{
   })
 });
 
-router.get('/nearestBranch', (req, res, next)=>{
-  watsonBranch.run({
-    input: {
-      text: req.query.input
-    }
-  }).then(data=>{
-    res.success(data);
-  }).catch(error=>{
-    let err = Errors.raise('WATSON_SEND_MSG_ERROR');
-    err.error.details = error;
-    res.error(err);
-  })
-});
-
-router.get('/nearestATM', (req, res, next)=>{
-  watsonATM.run({
-    input: {
-      text : req.query.input
-    }
-  }).then(data=>{
-    res.success(data);
-  }).catch(error=>{
-    let err = Errors.raise('WATSON_SEND_MSG_ERROR');
-    err.error.details = error;
-    res.error(err);
-  })
-});
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const branch = require('../../Branch/model/Branch');
 
 module.exports.run = (context)=>{
-  return branch.getByNearestLatLong(context.lat, context.lng);
+  return branch.getByNearestLatLong(lat.latitude, lng.longitude);
 };

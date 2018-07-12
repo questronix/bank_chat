@@ -23,6 +23,8 @@
 # Dump of table atm
 # ------------------------------------------------------------
 
+USE "chassi_db";
+
 DROP TABLE IF EXISTS `atm`;
 
 CREATE TABLE `atm` (
