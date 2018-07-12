@@ -61,19 +61,26 @@
                                                 <div class="card-content">
                                                     <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
                                                 <br><br>
-                                                    <span class="style-green"> Open </span>
-                                                <br><br>
-                                                    <div class="card-btn-bundle">
-                                                        <div class="card-btn">
-                                                            {{ coordinates.address }} <br>
-                                                            Operating Hours: {{ coordinates.opening }} - {{ coordinates.closing }}
+                                                    <h4 class="card-title">
+                                                       {{coordinates.name}}
+                                                    </h4>
+                                                    <br>
+                                                    <p class="card-text">
+                                                        <span class="fa fa-map-marker"></span>  {{  coordinates.address}}
+                                                        <br/><br>
+                                                       
+                                                    </p>
+                                                    <p>
+                                                       Operating Hours: <span class="style-green"> {{ coordinates.opening}} </span> -  <span class="style-green"> {{ coordinates.closing}} </span> 
+                                                        <br/><br>
+                                                        Status: 
+                                                        <span class="style-red"> Open </span>
+                                                    </p>
+                                                </div>  
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        
 
                         <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes'">            
                             <div class="chat-bg">
@@ -224,14 +231,16 @@ export default {
             for(var i=0; i < data.data.length; i++){
                 if(data.context.action === 'getNearestATMPlace' || 'getNearestATMLatLong'){
                     if(data.data[i].status === 1){this.latLongs.push({
+                    'name': data.data[i].name,
                     'lat': data.data[i].latitude,
                     'long': data.data[i].longitude,
                     'address': data.data[i].address,
                     'opening' : data.data[i].opening,
                     'closing' : data.data[i].closing,
                 });}
-                }else{
+                }if(data.context.action === 'getNearestBranchPlace' || 'getNearestBranchLatLong'){
                 this.latLongs.push({
+                'name': data.data[i].name,
                 'lat': data.data[i].latitude,
                 'long': data.data[i].longitude,
                 'address': data.data[i].address,
@@ -315,6 +324,7 @@ export default {
                 'data' : array,
                 'currentAction' : contextAction,
             })           
+            console.log(sender, message, array, contextAction);
         },
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
