@@ -28,11 +28,11 @@
                         <div class="chat-bg">
                             <p>{{ message.text }}</p>
                         </div>
-                        <img class="avatar" src="https://files.fm/thumb_show.php?i=nv26hu44&view">
+                        <img class="avatar" src="https://i.imgur.com/UaEENFi.jpg">
                     </div>
 
                     <div class="left-chat" v-if="message.sender === 'robot'">
-                    <img class="avatar" src="https://scontent.fmnl5-1.fna.fbcdn.net/v/t1.0-9/33397319_1722424464512111_6450349599310741504_n.jpg?_nc_cat=0&oh=fd8c31a1b3162ca2da4a9bf9b9a9ce15&oe=5B9090F5">
+                    <img class="avatar" src="https://i.imgur.com/s3dQFPp.jpg">
                         <div class="nearest-branch" v-if="message.text === 'Which location would you like to use?' ">
                             <div class="cardOne">
                                 <div class="chat-card">
