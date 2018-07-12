@@ -292,7 +292,7 @@ export default {
           }
           context.lat = latitude;
           context.lng = longitude;
-          
+          console.log(context.lat, context.lng);
           let options = {
               context: context || {},
               input:{
