@@ -531,3 +531,11 @@ input {
       width: 250px;
       height: 150px;
     }
+
+    #map {
+      border-radius: 20px;
+    }
+
+    #display {
+      color: #00c853;
+    }
