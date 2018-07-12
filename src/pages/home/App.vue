@@ -138,7 +138,23 @@
                                             {{ commands.name }}
                                         </a>
                                     </div></div></div></div>
-                        </div> 
+                    </div>
+
+                    <div class="nearest-branch" v-else-if="message.currentAction === 'getCardReqs'">
+                            <div class="cardOne">
+                                <div class="chat-card">
+                                    <div class="card-content">
+                                        <p class="card-text">
+                                            {{ message.text }}
+                                        </p>
+                                    </div>
+                                    <div class="chat-card" v-for="(cardreqs, index) in message.data" :key="index">
+                                    <div class="card-btn-bundle">
+                                        <div class="card-btn">
+                                            {{ cardreqs.description }}
+                                        </div>
+                                    </div></div></div></div>
+                        </div>
 
 
                                    
@@ -198,6 +214,7 @@ export default {
         depositReqs: [],
         chassiCommands: [],
         value: '',
+        cardReqs: [],
     }
 },
     methods: {
@@ -211,7 +228,7 @@ export default {
             }).then(data=>{
                 context = data.context;
                 this.action = data.context.action;
-                if(this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase(this.action);}
+                if(this.action === 'getCardReqs' || this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase(this.action);}
                 else if(this.action === 'specificCard'){
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
@@ -402,6 +419,13 @@ export default {
                     'name': data.data[i].name,
                     });
                 }
+            }else if(context.action === 'getCardReqs'){
+                for(var i=0; i < data.data.length; i++){
+                    this.cardReqs.push({
+                    'id': data.data[i].id,
+                    'description': data.data[i].description,
+                    });
+                }
             }
 
             this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
@@ -413,7 +437,8 @@ export default {
 
         this.creditCards = [];
         this.depositReqs = [];
-        this.chassiCommands = [];     
+        this.chassiCommands = [];
+        this.cardReqs = [];     
         this.value = null;
         },
     },
