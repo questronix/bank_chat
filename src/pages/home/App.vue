@@ -117,24 +117,21 @@
                             </div>
                         </div>
 
-
-                        <div class="credCards" v-else-if="message.currentAction === 'getChassiCommands'">            
-                           <div class="chat-bg">
-                                {{ message.text }}
-                            </div>                                
-                            
-                            <div class="chat-card" v-for="(commands, index) in message.data" :key="index">
-                              <div class="chat-card-bundle custom-scroll">    
-                                <div class="card-content">
+                    <div class="nearest-branch" v-else-if="message.currentAction === 'getChassiCommands'">
+                            <div class="cardOne">
+                                <div class="chat-card">
+                                    <div class="card-content">
+                                        <p class="card-text">
+                                            {{ message.text }}
+                                        </p>
+                                    </div>
+                                    <div class="chat-card" v-for="(commands, index) in message.data" :key="index">
                                     <div class="card-btn-bundle">
                                         <a href="#" class="card-btn" v-on:click="inputYes">
                                             {{ commands.name }}
                                         </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    </div></div></div></div>
+                        </div> 
 
 
                                    
