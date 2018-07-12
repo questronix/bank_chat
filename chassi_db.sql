@@ -22,8 +22,8 @@
 
 # Dump of table atm
 # ------------------------------------------------------------
-
-USE "chassi_db";
+DROP DATABASE IF EXISTS `chassi_db`;
+USE `chassi_db`;
 
 DROP TABLE IF EXISTS `atm`;
 
@@ -913,6 +913,36 @@ VALUES
 
 /*!40000 ALTER TABLE `chassicommands` ENABLE KEYS */;
 UNLOCK TABLES;
+
+# Dump of card app requirements
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `cardreqs`;
+
+CREATE TABLE `cardreqs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `definition` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `cardreqs` WRITE;
+
+INSERT INTO `cardreqs` (`id`, `definition`)
+VALUES
+	(1, 'Fully accomplished and signed China Bank Mastercard application form.'),
+	(2, 'Proof of Identification - At least one (1) valid photo-bearing government-issued ID'),
+	(3, 'Proof of Income'),
+	(4, 'Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)'),
+	(5, 'Proof of current and permanent address (Additional Regulatory Requirement)'),
+	(6, 'Proof of birthdate, birthplace, and nationality (Additional Regulatory Requirement)'),
+	(7, 'Additional documents for non-immigrants and embassy employees: Photocopy of unexpired passport/visa'),
+	(8, 'Additional documents for non-immigrants and embassy employees: Alien Certificate of Registration/I-Card (ACR/ICR)'),
+	(9, 'Valid credit card/s with tenure of at least one (1) year and issued in the Philippines');
+
+/*!40000 ALTER TABLE `cardreqs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 
 
 
