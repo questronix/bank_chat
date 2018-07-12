@@ -222,8 +222,8 @@ export default {
         forLocation(options){
         Api.post('/', options).then(data=>{
             for(var i=0; i < data.data.length; i++){
-                if(data.context.action === 'getNearestATMPlace'){
-                    if(data.data[i].status === 0){this.latLongs.push({
+                if(data.context.action === 'getNearestATMPlace' || 'getNearestATMLatLong'){
+                    if(data.data[i].status === 1){this.latLongs.push({
                     'lat': data.data[i].latitude,
                     'long': data.data[i].longitude,
                     'address': data.data[i].address,
