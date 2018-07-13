@@ -8,6 +8,7 @@ const PARAMS = 'PARAMS';
 
 const TABLE_COLUMNS = {
     id: 'string',
+    code: 'string',
     name: 'string',
     definition: 'string',
     imgSrc: 'string',
@@ -33,11 +34,10 @@ module.exports.getCCDefinition = () => {
 
 module.exports.getSpecificDefinition = (inputName) => {
     const ACTION = '[getSpecificDefinition]';
- 
     return new Promise((resolve, reject) => {
         let cols = TABLE_COLUMNS;
         let sql = `
-            SELECT ${Object.keys(cols).join(',')} FROM ${TABLE_NAME} WHERE id = ?`;
+            SELECT ${Object.keys(cols).join(',')} FROM ${TABLE_NAME} WHERE code = ?`;
 
         db.execute(sql,[inputName]).then(rows=>{
             resolve(JSON.parse(JSON.stringify(rows)));

@@ -22,7 +22,8 @@
 
 # Dump of table atm
 # ------------------------------------------------------------
-DROP DATABASE IF EXISTS `chassi_db`;
+
+
 USE `chassi_db`;
 
 DROP TABLE IF EXISTS `atm`;
@@ -844,6 +845,7 @@ DROP TABLE IF EXISTS `credcards`;
 
 CREATE TABLE `credcards` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(100) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `definition` varchar(250) DEFAULT NULL,
   `imgSrc` varchar(200) DEFAULT NULL,
@@ -853,11 +855,11 @@ CREATE TABLE `credcards` (
 LOCK TABLES `credcards` WRITE;
 /*!40000 ALTER TABLE `credcards` DISABLE KEYS */;
 
-INSERT INTO `credcards` (`id`, `name`, `definition`, `imgSrc`)
+INSERT INTO `credcards` (`id`, `code`, `name`, `definition`, `imgSrc`)
 VALUES
-	(1,'CHINA BANK PRIME MASTERCARD','The China Bank Prime Mastercard is your ?go-to? card. It?s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.','https://www.chinabank.ph/images/cc/2016/Prime.png'),
-	(2,'CHINA BANK PLATINUM MASTERCARD','The China Bank Platinum Mastercard is your ultimate privilege lifestyle card. It?s the card that allows you to experience life?s wonderful surprises, to shop, dine, and travel to your heart?s content.','https://www.chinabank.ph/images/cc/2016/Platinum.png'),
-	(3,'CHINA BANK WORLD MASTERCARD','The China Bank World Mastercard is the card that gives you world-class privileges, taking luxury to a whole new level. It provides the widest spectrum and access to highly exclusive lifestyle and events, global perks, VIP lounges, and your own person','https://www.chinabank.ph/images/cc/2016/World.png');
+	(1,'Prime', 'CHINA BANK PRIME MASTERCARD','The China Bank Prime Mastercard is your ?go-to? card. It?s the card that is flexible to your needs, giving the extra boost to manage your finances and more value to your spending.  It makes your day to day more exciting and extraordinary.','https://www.chinabank.ph/images/cc/2016/Prime.png'),
+	(2,'Platinum', 'CHINA BANK PLATINUM MASTERCARD','The China Bank Platinum Mastercard is your ultimate privilege lifestyle card. It?s the card that allows you to experience life?s wonderful surprises, to shop, dine, and travel to your heart?s content.','https://www.chinabank.ph/images/cc/2016/Platinum.png'),
+	(3,'World', 'CHINA BANK WORLD MASTERCARD','The China Bank World Mastercard is the card that gives you world-class privileges, taking luxury to a whole new level. It provides the widest spectrum and access to highly exclusive lifestyle and events, global perks, VIP lounges, and your own person','https://www.chinabank.ph/images/cc/2016/World.png');
 
 /*!40000 ALTER TABLE `credcards` ENABLE KEYS */;
 UNLOCK TABLES;
