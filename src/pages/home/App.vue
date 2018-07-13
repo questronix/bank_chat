@@ -112,11 +112,11 @@
                            <div class="chat-bg">
                                 {{ message.text }}
                             </div>                                
-                                    
+                                <br>
                               <div class="chat-card-bundle custom-scroll">    
                                 <div class="chat-card" v-for="(requirements, index) in message.data" :key="index">
                                     <div class="card-content">
-                                        <img id="map" v-bind:src="`${requirements.imgSrc}`">
+                                        <img id="credCard" v-bind:src="`${requirements.imgSrc}`">
                                         <br><br>
                                          <span class="style-green">  {{ requirements.name }} </span> 
                                          <br><br> 
@@ -346,6 +346,7 @@ export default {
                 'data' : array,
                 'currentAction' : contextAction,
             })   
+            console.log(sender, message, array, contextAction);
         },
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
@@ -416,8 +417,11 @@ export default {
                     'id': data.data[i].id,
                     'name': data.data[i].name,
                     'definition': data.data[i].definition,
+                    'imgSrc': data.data[i].imgSrc,
                     });
                 }
+                this.chat('robot', data.output.text.join('\n'), this.depositReqs, action);
+                this.depositReqs = [];
             }else if(context.action === 'getChassiCommands'){
                 for(var i=0; i < data.data.length; i++){
                     this.chassiCommands.push({

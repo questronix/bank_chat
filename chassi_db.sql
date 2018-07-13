@@ -884,9 +884,9 @@ LOCK TABLES `depositreqs` WRITE;
 
 INSERT INTO `depositreqs` (`id`, `name`, `definition`, `imgSrc`)
 VALUES
-	(1, 'Account Number', 'The 10-digit number of the account you are going to deposit funds to.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png'),
-	(2, 'Account Name', 'The name of the account you are going to deposit funds to. This may be a person\'s name or the name of the company or business', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png'),
-	(3, 'Cash to be deposited', 'You must have your cash on hand and make sure to know the exact amount you are going to deposit.', 'https://wp-test.sencha.com/wp-content/uploads/2016/02/icon-sencha-test-studio-1.png');
+	(1, 'Account Number', 'The 10-digit number of the account you are going to deposit funds to.', 'https://i.imgur.com/7CB8Ebb.jpg'),
+	(2, 'Account Name', 'The name of the account you are going to deposit funds to. This may be a person\'s name or the name of the company or business', 'https://i.imgur.com/ELOOyJj.jpg'),
+	(3, 'Cash to be deposited', 'You must have your cash on hand and make sure to know the exact amount you are going to deposit.', 'https://i.imgur.com/XMt01zc.png');
 
 /*!40000 ALTER TABLE `depositreqs` ENABLE KEYS */;
 UNLOCK TABLES;
