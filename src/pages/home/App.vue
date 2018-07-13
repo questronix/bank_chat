@@ -82,7 +82,7 @@
                                     </div>
                         
 
-                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'getCreditCardTypes' || message.currentAction === 'specificCard'">            
                             <div class="chat-bg">
                                 {{ message.text }}
                             </div>     
@@ -399,6 +399,7 @@ export default {
                 for(var i=0; i < data.data.length; i++){
                     this.creditCards.push({
                     'id': data.data[i].id,
+                    'code': data.data[i].code,
                     'name': data.data[i].name,
                     'definition': data.data[i].definition,
                     'imgSrc' : data.data[i].imgSrc,
