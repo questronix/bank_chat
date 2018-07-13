@@ -70,9 +70,14 @@
                                                         <br/><br>
                                                        
                                                     </p>
-                                                    <p>
+                                                    <p  v-if="message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestBranchLatLong'">
+
                                                        Operating Hours: <span class="style-green"> {{ coordinates.opening}} </span> -  <span class="style-green"> {{ coordinates.closing}} </span> 
                                                         <br/><br>
+                                                        Status: 
+                                                        <span class="style-red"> Open </span>
+                                                    </p>
+                                                    <p v-else>
                                                         Status: 
                                                         <span class="style-red"> Open </span>
                                                     </p>
@@ -246,8 +251,9 @@ export default {
         forLocation(options){
         Api.post('/', options).then(data=>{
             for(var i=0; i < data.data.length; i++){
-                if(data.context.action === 'getNearestATMPlace' || 'getNearestATMLatLong'){
-                    if(data.data[i].status === 1){this.latLongs.push({
+                if( data.context.action === 'getNearestATMPlace' || data.context.action === 'getNearestATMLatLong'){
+                    if(data.data[i].status === 1){
+                    this.latLongs.push({
                     'name': data.data[i].name,
                     'lat': data.data[i].latitude,
                     'long': data.data[i].longitude,
@@ -255,7 +261,7 @@ export default {
                     'opening' : data.data[i].opening,
                     'closing' : data.data[i].closing,
                 });}
-                }if(data.context.action === 'getNearestBranchPlace' || 'getNearestBranchLatLong'){
+                }else if(data.context.action === 'getNearestBranchPlace' ||data.context.action === 'getNearestBranchLatLong'){
                 this.latLongs.push({
                 'name': data.data[i].name,
                 'lat': data.data[i].latitude,
@@ -269,7 +275,6 @@ export default {
             
             this.arrayLength = data.data.length;
             this.action = data.context.action;
-            console.log("DATA", data);
             if(this.arrayLength>0){
                 this.checkIntent(data.output.text.join('\n'),  this.latLongs, this.action);
             }
@@ -340,8 +345,7 @@ export default {
                 'text' : message,
                 'data' : array,
                 'currentAction' : contextAction,
-            })           
-            console.log(sender, message, array, contextAction);
+            })   
         },
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
@@ -395,7 +399,7 @@ export default {
               }
           };
          Api.post('/', options).then(data=>{
-            if(context.action === 'getCreditCardTypes' || 'specificCard'){
+            if(context.action === 'getCreditCardTypes' || context.action ===  'specificCard'){
                 for(var i=0; i < data.data.length; i++){
                     this.creditCards.push({
                     'id': data.data[i].id,
@@ -405,6 +409,7 @@ export default {
                     'imgSrc' : data.data[i].imgSrc,
                     });
                 }
+                this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
             }else if(context.action === 'getDepositReqsList'){
                 for(var i=0; i < data.data.length; i++){
                     this.depositReqs.push({
@@ -420,16 +425,18 @@ export default {
                     'name': data.data[i].name,
                     });
                 }
+                this.chat('robot', data.output.text.join('\n'), this.chassiCommands, action);
+                this.chassiCommands = [];
             }else if(context.action === 'getCardReqs'){
                 for(var i=0; i < data.data.length; i++){
                     this.cardReqs.push({
                     'id': data.data[i].id,
-                    'description': data.data[i].description,
+                    'definition': data.data[i].definition,
                     });
                 }
             }
 
-            this.chat('robot', data.output.text.join('\n'), this.creditCards, action);
+           
             this.creditCards = [];
         }).catch(error=>{
             console.log(error);
@@ -438,7 +445,7 @@ export default {
 
         this.creditCards = [];
         this.depositReqs = [];
-        this.chassiCommands = [];
+        
         this.cardReqs = [];     
         this.value = null;
         },

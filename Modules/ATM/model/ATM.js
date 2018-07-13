@@ -31,7 +31,7 @@ module.exports.getNearestATM = (lat, long) => {
                 radians(?)) + 
                 sin(radians(?)) * 
                 sin(radians(latitude)))
-             ) AS distance FROM ${TABLE_NAME} HAVING distance < 5 ORDER BY distance LIMIT 8;
+             ) AS distance FROM ${TABLE_NAME} HAVING distance < 5 ORDER BY distance LIMIT 5;
         `;
         db.execute(sql,[lat, long, lat]).then(rows=>{
             resolve(JSON.parse(JSON.stringify(rows)));
