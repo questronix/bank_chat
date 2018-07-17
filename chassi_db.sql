@@ -6,7 +6,7 @@
 # https://github.com/sequelpro/sequelpro
 #
 # Host: 127.0.0.1 (MySQL 5.7.15)
-# Database: chassi
+# Database: chassi_db
 # Generation Time: 2018-07-11 06:14:50 +0000
 # ************************************************************
 
@@ -22,8 +22,8 @@
 
 # Dump of table atm
 # ------------------------------------------------------------
-
-
+DROP DATABASE IF EXISTS `chassi_db`;
+CREATE DATABASE `chassi_db`;
 USE `chassi_db`;
 
 DROP TABLE IF EXISTS `atm`;
