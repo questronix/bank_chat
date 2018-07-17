@@ -865,6 +865,85 @@ VALUES
 UNLOCK TABLES;
 
 
+# Dump of card app requirements
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `cardreqs`;
+
+CREATE TABLE `cardreqs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `definition` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `cardreqs` WRITE;
+
+INSERT INTO `cardreqs` (`id`, `definition`)
+VALUES
+	(1, 'Fully accomplished and signed China Bank Mastercard application form.'),
+	(2, 'Proof of Identification - At least one (1) valid photo-bearing government-issued ID'),
+	(3, 'Proof of Income'),
+	(4, 'Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)'),
+	(5, 'Proof of current and permanent address (Additional Regulatory Requirement)'),
+	(6, 'Proof of birthdate, birthplace, and nationality (Additional Regulatory Requirement)'),
+	(7, 'Additional documents for non-immigrants and embassy employees: Photocopy of unexpired passport/visa'),
+	(8, 'Additional documents for non-immigrants and embassy employees: Alien Certificate of Registration/I-Card (ACR/ICR)'),
+	(9, 'Valid credit card/s with tenure of at least one (1) year and issued in the Philippines');
+
+/*!40000 ALTER TABLE `cardreqs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table loan
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `loan`;
+
+CREATE TABLE `loan` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `loan_id` int(11) unsigned NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `loan` WRITE;
+/*!40000 ALTER TABLE `loan` DISABLE KEYS */;
+
+INSERT INTO `loan` (`id`, `loan_id`, `name`)
+VALUES
+	(1, 1, 'HomePlus'),
+	(2, 2, 'AutoPlus');
+/*!40000 ALTER TABLE `loan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of loan requirements
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `loanreqs`;
+
+CREATE TABLE `loanreqs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `loan_id` int(11) unsigned NOT NULL,
+  `definition` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `loanreqs` WRITE;
+
+INSERT INTO `loanreqs` (`id`, `loan_id`, `definition`)
+VALUES
+	(1, 1, 'HomePlus Application Form'),
+	(2, 2, 'AutoPlus Application Form'),
+	(3, 2, 'Certificate of Employment stating length of service and monthly compensation package (for employed individuals).'),
+	(4, 2, 'Latest Income Tax Return (ITR) with Statement of Assets and Liabilities (if self-employed)'),
+	(5, 2, 'Photocopy of Business Registration Papers (if applicable)'),
+	(6, 2, 'Community Tax Certificate of the principal borrower and all co-borrowers'),
+	(7, 2, 'Alien Certificate of Residence (if applicable)');
+
+/*!40000 ALTER TABLE `loanreqs` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 # Dump of Deposit Reqs
 # ------------------------------------------------------------
@@ -916,33 +995,7 @@ VALUES
 /*!40000 ALTER TABLE `chassicommands` ENABLE KEYS */;
 UNLOCK TABLES;
 
-# Dump of card app requirements
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `cardreqs`;
-
-CREATE TABLE `cardreqs` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `definition` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-LOCK TABLES `cardreqs` WRITE;
-
-INSERT INTO `cardreqs` (`id`, `definition`)
-VALUES
-	(1, 'Fully accomplished and signed China Bank Mastercard application form.'),
-	(2, 'Proof of Identification - At least one (1) valid photo-bearing government-issued ID'),
-	(3, 'Proof of Income'),
-	(4, 'Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)Latest Income Tax Return - BIR form 2316 or 1700 (Additional Regulatory Requirement)'),
-	(5, 'Proof of current and permanent address (Additional Regulatory Requirement)'),
-	(6, 'Proof of birthdate, birthplace, and nationality (Additional Regulatory Requirement)'),
-	(7, 'Additional documents for non-immigrants and embassy employees: Photocopy of unexpired passport/visa'),
-	(8, 'Additional documents for non-immigrants and embassy employees: Alien Certificate of Registration/I-Card (ACR/ICR)'),
-	(9, 'Valid credit card/s with tenure of at least one (1) year and issued in the Philippines');
-
-/*!40000 ALTER TABLE `cardreqs` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 
