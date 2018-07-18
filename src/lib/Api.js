@@ -22,6 +22,17 @@ class Api {
     return this.xhr(route, params, 'DELETE')
   }
 
+  static getJSON(route){
+    return fetch(route).then( resp => {
+       let json = resp.json();
+      if (!resp.error) {
+        return json;
+      }
+      return json.then(err => {return err});
+    });
+
+  }
+
   static xhr(route, params, verb) {
     const url = `${window.location.origin}${route}`
     let options = Object.assign({ method: verb }, params ? { body: JSON.stringify(params) } : null );
