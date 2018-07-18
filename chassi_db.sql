@@ -924,14 +924,14 @@ DROP TABLE IF EXISTS `loanreqs`;
 
 CREATE TABLE `loanreqs` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `loan_id` int(11) unsigned NOT NULL,
+  `loanreqs_id` int(11) unsigned NOT NULL,
   `definition` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `loanreqs` WRITE;
 
-INSERT INTO `loanreqs` (`id`, `loan_id`, `definition`)
+INSERT INTO `loanreqs` (`id`, `loanreqs_id`, `definition`)
 VALUES
 	(1, 1, 'HomePlus Application Form'),
 	(2, 2, 'AutoPlus Application Form'),
@@ -943,6 +943,30 @@ VALUES
 
 /*!40000 ALTER TABLE `loanreqs` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+# Dump of Account Reqs
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `accountreqs`;
+
+CREATE TABLE `accountreqs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `definition` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `accountreqs` WRITE;
+/*!40000 ALTER TABLE `accountreqs` DISABLE KEYS */;
+
+INSERT INTO `accountreqs` (`id`, `definition`)
+VALUES
+	(1, 'Two (2) 1x1 ID Pictures'),
+	(2, 'Original/s and clear copy/ies of at least one valid ID');	
+
+/*!40000 ALTER TABLE `accountreqs` ENABLE KEYS */;
+UNLOCK TABLES;
+-- ===============
 
 
 # Dump of Deposit Reqs
