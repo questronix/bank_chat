@@ -51,7 +51,7 @@
                                     </div></div></div>
                         </div> 
 
-                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace'">            
+                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace' || message.currentAction === 'getLoanDetails'">            
                                         <div class="chat-bg">
                                             {{ message.text }}
                                         </div>     
@@ -161,6 +161,22 @@
                                     </div></div></div></div>
                         </div>
 
+                        <div class="nearest-branch" v-else-if="message.currentAction === 'getLoanDetails'">
+                            <div class="cardOne">
+                                <div class="chat-card">
+                                    <div class="card-content">
+                                        <p class="card-text">
+                                            {{ message.text }}
+                                        </p>
+                                    </div>
+                                    <div class="chat-card" v-for="(loans, index) in message.data" :key="index">
+                                    <div class="card-btn-bundle">
+                                        <div class="card-btn">
+                                            {{ loans.name }}
+                                        </div>
+                                    </div></div></div></div>
+                        </div>
+
 
                                    
                      
@@ -220,6 +236,7 @@ export default {
         chassiCommands: [],
         value: '',
         cardReqs: [],
+        loans: [],
     }
 },
     methods: {
@@ -233,7 +250,7 @@ export default {
             }).then(data=>{
                 context = data.context;
                 this.action = data.context.action;
-                if(this.action === 'getCardReqs' || this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands'){this.getDatabase(this.action);}
+                if(this.action === 'getCardReqs' || this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands' || this.action === 'getLoanDetails'){this.getDatabase(this.action);}
                 else if(this.action === 'specificCard'){
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
@@ -438,6 +455,14 @@ export default {
                     'definition': data.data[i].definition,
                     });
                 }
+            }else if(context.action === 'getLoanDetails'){
+                for(var i=0; i < data.data.length; i++){
+                    this.loans.push({
+                    'id': data.data[i].id,
+                    'loan_id': data.data[i].loan_id,
+                    'name': data.data[i].name,
+                    });
+                }
             }
 
            
@@ -449,6 +474,7 @@ export default {
 
         this.creditCards = [];
         this.depositReqs = [];
+        this.loans = [];
         
         this.cardReqs = [];     
         this.value = null;
