@@ -16,6 +16,7 @@
                             Okay
                         </a>
                     </div></div></div>
+                   
 
             <div class="nav">
                 <span class="fa fa-arrow-left"></span>
@@ -100,7 +101,29 @@
                                          <span class="style-green">  {{ card.name }} </span> 
                                          <br><br> 
                                          <p class="card-text">
+                                         
                                             {{ card.definition }}
+                                        </p>    
+                                 
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="credCards" v-else-if="message.currentAction === 'getForeignExchange'">            
+                            <div class="chat-bg">
+                                {{ message.text }}
+                            </div>     
+                            <br>                           
+                            <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card" v-for="(card, index) in message.data" :key="index">
+                                    <div class="card-content">
+                                          <img id="credCard" v-bind:src="`${card.imgSrc}`"><br><br>
+                                         <span class="style-green">  {{ card.country }}  </span>   --  <span class="style-green">  PHP </span> 
+                                         <br><br> 
+                                         <p class="card-text">
+                                            We buy:
+                                            <span class="style-red">  {{ card.rate }} </span>
                                         </p>    
                                  
                                  </div>
@@ -187,7 +210,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
+                <span id='sendButton' v-on:click="currentExchange" type="text" class="fa fa-paper-plane green-text"></span>
             </div>
         </div>
     </div>            
@@ -220,10 +243,47 @@ export default {
         chassiCommands: [],
         value: '',
         cardReqs: [],
+        forex: [],
     }
 },
     methods: {
-        //normal inputs only, typed by the user.
+
+        currentExchange(string){
+            var fx = require('money');
+            Api.getJSON(
+            'https://openexchangerates.org/api/latest.json?app_id=3f3984e88e63498c8c3ecd5c190a6302').then(data=>{
+                console.log(data.rates);
+                if ( data != null ) {
+                    let currencies = ["EUR", "USD", "CNY"];
+                    let flags = ["https://i.imgur.com/3cx9v2o.png", "https://i.imgur.com/i9k1SyM.png", "https://i.imgur.com/7A4nl53.png"]
+                    fx.rates = data.rates;
+                    for(var i = 0; i < 3; i++){
+                        let rate = fx.convert(1, {from: currencies[i], to: "PHP"});
+                        this.forex.push({
+                            'country' : currencies[i],
+                            'rate' : rate,
+                            'imgSrc' : flags[i],
+                        });
+                        
+                    }
+                this.chat('robot', string, this.forex, this.action);
+                    
+                } else {
+                    // If not, apply to fxSetup global:
+                    var fxSetup = {
+                        rates : data.rates,
+                        base : data.base
+                        
+
+                    }
+                }
+            });
+            
+        
+
+            
+        },
+
         userInput() {
             this.chat('user', this.message);
             Api.post('/', {
@@ -237,7 +297,11 @@ export default {
                 else if(this.action === 'specificCard'){
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
-                }else{
+                } else if(this.action === 'getForeignExchange'){
+                    this.currentExchange(data.output.text.join('\n'));
+
+                }
+                else{
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
                 }
                 this.message= null;
@@ -371,6 +435,7 @@ export default {
         inputYes() {
             this.message="Use my current location"
             this.geoLocation();
+            console.log("efa");
         },
         inputNo() {
             this.message= place;
