@@ -17,7 +17,7 @@ const TABLE_COLUMNS = {
 
 module.exports.getLoanDetails = () => {
     const ACTION = '[getLoanDetails]';
- 
+    console.log("hello");
     return new Promise((resolve, reject) => {
         let cols = TABLE_COLUMNS;
         let sql = `
@@ -32,6 +32,7 @@ module.exports.getLoanDetails = () => {
         });
     });
 };
+
 
 module.exports.getSpecificDetail = (inputName) => {
     const ACTION = '[getSpecificDetail]';
@@ -48,4 +49,5 @@ module.exports.getSpecificDetail = (inputName) => {
         });
     });
 };
+
 
