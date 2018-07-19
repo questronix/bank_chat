@@ -1,8 +1,8 @@
 applications:
 - path: .
-  memory: 384M
+  memory: 256M
   instances: 1
   domain: au-syd.mybluemix.net
   name: Chassi Bank Bot
-  host: bankbot
+  host: chassi
   disk_quota: 1024M
