@@ -1,15 +1,15 @@
-const TAG = '[Loan]';
+const TAG = '[Loans]';
 const db = require('../../Common/service/Database');
 const err = require('../../Common/service/Errors');
 const logger = require('../../Common/service/Logger');
 
 const TABLE1_NAME = 'loan';
-const TABLE2_NAME = 'loanreqs';
+// const TABLE2_NAME = 'loanreqs';
 
 const PARAMS = 'PARAMS';
 
 const TABLE_COLUMNS = {
-    loan.id: 'string',
+    id: 'string',
     loan_id: 'string',
     name: 'string'
 
@@ -21,8 +21,8 @@ module.exports.getLoanDetails = () => {
     return new Promise((resolve, reject) => {
         let cols = TABLE_COLUMNS;
         let sql = `
-            SELECT ${Object.keys(cols).join(',')} FROM ${TABLE1_NAME} INNER JOIN ${TABLE2_NAME} ON ${TABLE1_NAME}.loan_id = ${TABLE2_NAME}.loan_id`;
-
+            // SELECT ${Object.keys(cols).join(',')} FROM ${TABLE1_NAME} INNER JOIN ${TABLE2_NAME} ON ${TABLE1_NAME}.loan_id = ${TABLE2_NAME}.loan_id`;
+            SELECT ${Object.keys(cols).join(',')} FROM ${TABLE1_NAME}`;
         db.execute(sql,[]).then(rows=>{
             resolve(JSON.parse(JSON.stringify(rows)));
         }).catch(error=>{
