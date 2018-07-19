@@ -924,14 +924,14 @@ DROP TABLE IF EXISTS `loanreqs`;
 
 CREATE TABLE `loanreqs` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `loanreqs_id` int(11) unsigned NOT NULL,
+  `loan_id` int(11) unsigned NOT NULL,
   `definition` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `loanreqs` WRITE;
 
-INSERT INTO `loanreqs` (`id`, `loanreqs_id`, `definition`)
+INSERT INTO `loanreqs` (`id`, `loan_id`, `definition`)
 VALUES
 	(1, 01, 'HomePlus Application Form'),
 	(2, 02, 'AutoPlus Application Form'),
