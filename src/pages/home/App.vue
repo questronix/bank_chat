@@ -72,12 +72,12 @@
                                         Rate Fixing Period
                                         <select v-model="fixAmount" >
                                         <option disabled value=""> Rate Fixing Period</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>10</option>
+                                        <option value="0.06">1 year</option>
+                                        <option  value="0.065">2 years</option>
+                                        <option value="0.065">3 years</option>
+                                        <option value="0.07">4 years</option>
+                                        <option value="0.07">5 years</option>
+                                        <option value="0.09">10 years</option>
                                         </select>
                                          <br><br>
                                           <div class="chat-suggestions">
@@ -89,7 +89,16 @@
                             </div>
                         </div>
 
-                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace' || message.currentAction === 'getLoanDetails'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'calcAnswer'">
+                              <div class="chat-bg">
+                                PHP {{ message.text }} each month. 
+                            </div>     <br>
+                             <div class="chat-bg">
+                                The result represents your Equal Monthly Amortization fixed for 1 year and is subject to annual repricing thereafter.
+                            </div>     
+                        </div>
+
+                         <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace'">            
                                         <div class="chat-bg">
                                             {{ message.text }}
                                         </div>     
@@ -246,8 +255,6 @@
                         </div>
                     </div> 
            </div></div>
-      
-   
             <div class="chat-suggestions custom-scroll">
                 <a class="chat-suggestions-items" id="nearest-branch" v-on:click="nearestBranch">
                     Find Nearest Branch</a>
@@ -275,6 +282,7 @@
 import Api from '../../lib/Api';
 //import cardOne from '../../components/cardOne';
 import imgCard from '../../components/imgCard';
+const Math = require('mathjs');
 let longitude = 0, latitude = 0;
 let context = undefined;
 let currentPlace = undefined;
@@ -302,27 +310,26 @@ export default {
     }
 },
     methods: {
+
         calculatorFormula(){
             this.chat('user', `Amount: ₱ ${this.loanAmount} \n Term: ${this.loanTerm} years \n Fix Amount: ${this.fixAmount} years`, null, null);
-            var lt = parseFloat(this.loanTerm)*12;
-            console.log("LT", lt);
-            var i = parseFloat(this.fixAmount/12.0);
-            console.log("I", i);
-            var t = 1.0 + i;
-            console.log("T", t);
+            var lt = this.loanTerm * 12;
+            var i = this.fixAmount / 12.0;
+            var t = 1 + i;
             var tRaised = Math.pow(t, lt);
-            console.log("tRaised", tRaised);
-            var factor = tRaised * i / (tRaised - 1.0 );
-            console.log("factor", factor);
-
+            var tRaised2 = tRaised * i;
+            var denominator = tRaised - 1.0;
+            var factor = tRaised2 / denominator;
             var answer = this.loanAmount * factor; 
-            console.log(answer);
-        },
+            let rounded = Math.round(answer * Math.pow(10, 2))/Math.pow(10, 2);
+            this.chat('robot', rounded, null, "calcAnswer"); 
+            },
+
+
         currentExchange(string){
             var fx = require('money');
             Api.getJSON(
             'https://openexchangerates.org/api/latest.json?app_id=3f3984e88e63498c8c3ecd5c190a6302').then(data=>{
-                console.log(data.rates);
                 if ( data != null ) {
                     let currencies = ["EUR", "USD", "CNY"];
                     let flags = ["https://i.imgur.com/3cx9v2o.png", "https://i.imgur.com/i9k1SyM.png", "https://i.imgur.com/7A4nl53.png"]
@@ -359,12 +366,9 @@ export default {
                 else if(this.action === 'specificCard'){
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
-                } else if(this.action === 'getForeignExchange'){
+                }else if(this.action === 'getForeignExchange'){
                     this.currentExchange(data.output.text.join('\n'));
-
-                }
-                else{
-
+                }else{
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
                 }
                 this.message= null;
@@ -433,9 +437,8 @@ export default {
           if(this.action === "whichLocation"){
             context.action = "getNearestBranchPlace";
           }else{
-            context.action = "getNearestATMPlace"
-          }
-          let options = {
+            context.action = "getNearestATMPlace"}
+            let options = {
               context: context || {},
               input:  {
                     text: place.name || ""
@@ -525,6 +528,7 @@ export default {
                 text: this.message
               }
           };
+
          Api.post('/', options).then(data=>{
             if(context.action === 'getCreditCardTypes' || context.action ===  'specificCard'){
                 for(var i=0; i < data.data.length; i++){
