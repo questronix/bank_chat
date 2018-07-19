@@ -911,8 +911,8 @@ LOCK TABLES `loan` WRITE;
 
 INSERT INTO `loan` (`id`, `loan_id`, `name`)
 VALUES
-	(1, 1, 'HomePlus'),
-	(2, 2, 'AutoPlus');
+	(1, 01, 'HomePlus'),
+	(2, 02, 'AutoPlus');
 /*!40000 ALTER TABLE `loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -933,13 +933,13 @@ LOCK TABLES `loanreqs` WRITE;
 
 INSERT INTO `loanreqs` (`id`, `loanreqs_id`, `definition`)
 VALUES
-	(1, 1, 'HomePlus Application Form'),
-	(2, 2, 'AutoPlus Application Form'),
-	(3, 2, 'Certificate of Employment stating length of service and monthly compensation package (for employed individuals).'),
-	(4, 2, 'Latest Income Tax Return (ITR) with Statement of Assets and Liabilities (if self-employed)'),
-	(5, 2, 'Photocopy of Business Registration Papers (if applicable)'),
-	(6, 2, 'Community Tax Certificate of the principal borrower and all co-borrowers'),
-	(7, 2, 'Alien Certificate of Residence (if applicable)');
+	(1, 01, 'HomePlus Application Form'),
+	(2, 02, 'AutoPlus Application Form'),
+	(3, 02, 'Certificate of Employment stating length of service and monthly compensation package (for employed individuals).'),
+	(4, 02, 'Latest Income Tax Return (ITR) with Statement of Assets and Liabilities (if self-employed)'),
+	(5, 02, 'Photocopy of Business Registration Papers (if applicable)'),
+	(6, 02, 'Community Tax Certificate of the principal borrower and all co-borrowers'),
+	(7, 02, 'Alien Certificate of Residence (if applicable)');
 
 /*!40000 ALTER TABLE `loanreqs` ENABLE KEYS */;
 UNLOCK TABLES;

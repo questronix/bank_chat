@@ -199,9 +199,9 @@
                                     </div>
                                     <div class="chat-card" v-for="(commands, index) in message.data" :key="index">
                                     <div class="card-btn-bundle">
-                                        <a href="#" class="card-btn" v-on:click="inputYes">
+                                        <div class="card-btn" v-on:click="userInput('commands.name')">
                                             {{ commands.name }}
-                                        </a>
+                                        </div>
                                     </div></div></div></div>
                     </div>
 
@@ -216,9 +216,10 @@
                                     <div class="chat-card" v-for="(cardreqs, index) in message.data" :key="index">
                                     <div class="card-btn-bundle">
                                         <div class="card-btn">
-                                            {{ cardreqs.description }}
+                                           {{ cardreqs.id }}. {{ cardreqs.definition }}
                                         </div>
-                                    </div></div></div></div>
+                                    </div>
+                                </div></div></div>
                         </div>
 
                         <div class="nearest-branch" v-else-if="message.currentAction === 'getLoanDetails'">
@@ -563,6 +564,7 @@ export default {
                     'definition': data.data[i].definition,
                     });
                 }
+                this.chat('robot', data.output.text.join('\n'), this.cardReqs, action);
             }else if(context.action === 'getLoanDetails'){
                 for(var i=0; i < data.data.length; i++){
                     this.loans.push({
@@ -571,6 +573,7 @@ export default {
                     'name': data.data[i].name,
                     });
                 }
+                this.chat('robot', data.output.text.join('\n'), this.loans, action);
             }
         }).catch(error=>{
             console.log(error);
