@@ -3,9 +3,6 @@ const path = require('path');
 //express
 const express = require('express');
 
-//session
-const session = require('express-session');
-
 const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
 
@@ -66,12 +63,17 @@ mysqlConnect.then((connect) => {
 
 if (process.env.SKIP_REDIS === 'true') {
     //declare session middleware
-    app.use(session({
-        secret: 'session.secret.key',
-        saveUninitialized: false,
-        resave: false
-    }));
+    console.log('REMOVE SESSION');
 } else {
+    //session
+    const session = require('express-session');
+
+    // app.use(session({
+    //     secret: 'session.secret.key',
+    //     saveUninitialized: false,
+    //     resave: false
+    // }));
+
     const redis = require('redis');
     const redisStore = require('connect-redis')(session);
     const client = redis.createClient();
@@ -107,13 +109,6 @@ app.use(function (req, res, next) {
 });
 
 let watson = require('./Modules/Watson');
-
-//declare session middleware
-app.use(session({
-    secret: 'this.is.super.secret.key', //make this unique and keep it somewhere safe
-    saveUninitialized: false,
-    resave: false
-}));
 
 app.use('/', watson);
 
