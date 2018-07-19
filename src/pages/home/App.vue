@@ -52,6 +52,43 @@
                                     </div></div></div>
                         </div> 
 
+                         <div class="credCards" v-else-if="message.currentAction === 'useLoanCalculator'">            
+                            <div class="chat-bg">
+                                {{ message.text }}
+                            </div>     
+                            <br>                           
+                            <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card">
+                                    
+                                    <div class="card-content">
+                                         <span class="style-red">  Loan Calculator </span>
+                                        <br><br> 
+                                        Loan Amount
+                                        <input v-model="loanAmount" placeholder="Enter amount here..">
+                                        <br><br>
+                                         Loan Term
+                                        <input v-model="loanTerm" placeholder="Enter years here..">
+                                        <br><br>
+                                        Rate Fixing Period
+                                        <select v-model="fixAmount" >
+                                        <option disabled value=""> Rate Fixing Period</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        <option>10</option>
+                                        </select>
+                                         <br><br>
+                                          <div class="chat-suggestions">
+                                         <a class="chat-suggestions-items" id="submit" v-on:click="calculatorFormula">
+                                         Submit</a></div>
+                                                                      
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+
                          <div class="credCards" v-else-if="message.currentAction === 'getNearestBranchLatLong' || message.currentAction === 'getNearestATMLatLong' ||message.currentAction === 'getNearestBranchPlace' || message.currentAction === 'getNearestATMPlace' || message.currentAction === 'getLoanDetails'">            
                                         <div class="chat-bg">
                                             {{ message.text }}
@@ -248,7 +285,7 @@ export default {
         chatBot: 'ChatBot',
         user: 'You',
         messages: [],
-        message: '',
+        message: '', loanAmount:'', fixAmount:'', loanTerm:'',
         action: '',
         latLongs: [],
         coordinates: '',
@@ -264,7 +301,22 @@ export default {
     }
 },
     methods: {
+        calculatorFormula(){
+            this.chat('user', `Amount: ₱ ${this.loanAmount} \n Term: ${this.loanTerm} years \n Fix Amount: ${this.fixAmount} years`, null, null);
+            var lt = parseFloat(this.loanTerm)*12;
+            console.log("LT", lt);
+            var i = parseFloat(this.fixAmount/12.0);
+            console.log("I", i);
+            var t = 1.0 + i;
+            console.log("T", t);
+            var tRaised = Math.pow(t, lt);
+            console.log("tRaised", tRaised);
+            var factor = tRaised * i / (tRaised - 1.0 );
+            console.log("factor", factor);
 
+            var answer = this.loanAmount * factor; 
+            console.log(answer);
+        },
         currentExchange(string){
             var fx = require('money');
             Api.getJSON(
@@ -281,26 +333,17 @@ export default {
                             'rate' : rate,
                             'imgSrc' : flags[i],
                         });
-                        
                     }
-                this.chat('robot', string, this.forex, this.action);
-                    
+                this.chat('robot', string, this.forex, this.action);      
                 } else {
                     // If not, apply to fxSetup global:
                     var fxSetup = {
                         rates : data.rates,
                         base : data.base
-                        
-
                     }
                 }
-            });
-            
-        
-
-            
+            });            
         },
-
         userInput() {
             this.chat('user', this.message);
             Api.post('/', {
@@ -308,6 +351,7 @@ export default {
                 input: {
                     text: this.message || ""}
             }).then(data=>{
+                console.log(data);
                 context = data.context;
                 this.action = data.context.action;
                 if(this.action === 'getCardReqs' || this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands' || this.action === 'getLoanDetails'){this.getDatabase(this.action);}
@@ -319,6 +363,7 @@ export default {
 
                 }
                 else{
+
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
                 }
                 this.message= null;
@@ -468,10 +513,8 @@ export default {
                 longitude = position.coords.longitude;
                 self.setCurrentPlace(latitude, longitude);
               })
-            
             }
         },
-
         getDatabase(action){
         context.action = action;
         if(context.action === 'specificCard'){context.value = this.value;}
@@ -529,9 +572,6 @@ export default {
                     });
                 }
             }
-
-           
-            this.creditCards = [];
         }).catch(error=>{
             console.log(error);
                 this.message= null;
@@ -540,7 +580,6 @@ export default {
         this.creditCards = [];
         this.depositReqs = [];
         this.loans = [];
-        
         this.cardReqs = [];     
         this.value = null;
         },
@@ -563,8 +602,6 @@ export default {
     },
 }
 </script>
-
-
 
 
  <style>
