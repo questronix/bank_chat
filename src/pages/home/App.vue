@@ -108,7 +108,7 @@
                                         <div class="chat-card-bundle custom-scroll">    
                                             <div class="chat-card" v-for="(coordinates, index) in message.data" :key="index">
                                                 <div class="card-content">
-                                                    <img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`">
+                                                    <a v-bind:href="`https://www.google.com/maps/@${coordinates.lat},${coordinates.long},30z`" target="_blank"><img id="map" v-bind:src="`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates.lat},${coordinates.long}&zoom=20&scale=40&markers=color:red%7C${coordinates.lat},${coordinates.long}&size=250x250&key=AIzaSyBVOGSI8yklJZu1jZp1edsCF4vcyFx4iBY`"></a>
                                                 <br><br>
                                                     <h4 class="card-title">
                                                        {{coordinates.name}}
