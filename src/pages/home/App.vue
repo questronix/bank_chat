@@ -23,7 +23,7 @@
                 <p>Chassi</p>
                 <span class="fa fa-window-maximize modal-trigger"></span>
              </div>
-            <div class="messages custom-scroll " >
+            <div id="msgBox" class="messages custom-scroll " >
                 <div class="message " v-for="(message, index) in messages" :key="index">
                     <div class="right-chat" v-if="message.sender === 'user'">
                         <div class="chat-bg">
@@ -46,9 +46,11 @@
                                         <a href="#" class="card-btn" v-on:click="inputYes">
                                             Use my current location
                                         </a>
-                                         <gmap-autocomplete class="card-btn"
-                                            @place_changed="setPlace"> 
-                                            </gmap-autocomplete>
+                                        <hr>
+                                        <div>
+                                            <input v-model="place_name" v-on:keyup.enter="setPlace" type="text" placeholder="Enter your location here." style="margin:10px; padding:5px 8px; outline:none; width:85%; " />
+                                            <br>
+                                            </div>
                                     </div></div></div>
                         </div> 
 
@@ -271,7 +273,7 @@
                 <input v-model="message" v-on:keyup.enter="userInput" type="text" placeholder="Aa" style="padding:5px 8px; outline:none; width:100%; " />
             </div>
             <div style="margin:0px 20px;">
-                <span id='sendButton' v-on:click="currentExchange" type="text" class="fa fa-paper-plane green-text"></span>
+                <span id='sendButton' v-on:click="userInput" type="text" class="fa fa-paper-plane green-text"></span>
             </div>
         </div>
     </div>            
@@ -307,6 +309,7 @@ export default {
         cardReqs: [],
         forex: [],
         loans: [],
+        place_name: '',
     }
 },
     methods: {
@@ -431,9 +434,9 @@ export default {
         });
        
         },
-        setPlace(place) {
-          var self = this;
-          self.position = place.geometry.location;
+        setPlace() {
+          this.chat('user', this.place_name, null, null);
+         
           if(this.action === "whichLocation"){
             context.action = "getNearestBranchPlace";
           }else{
@@ -441,11 +444,11 @@ export default {
             let options = {
               context: context || {},
               input:  {
-                    text: place.name || ""
+                    text: this.place_name || ""
                 }
             
           };
-        this.chat('user', place.name, null);
+        this.place_name = "";
         this.forLocation(options);  
           
         },
@@ -477,6 +480,8 @@ export default {
                 'currentAction' : contextAction,
             })   
             console.log(sender, message, array, contextAction);
+            var element = document.getElementById("msgBox");
+            element.scrollTop = element.scrollHeight + 10;
         },
         checkIntent(message, array, action){
             this.chat('robot', message, array, action);
