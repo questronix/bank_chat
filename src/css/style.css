@@ -267,7 +267,7 @@ input {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; }
+    -webkit-overflow-scrolling: touch ; }
     .wrapper .chat-card-bundle .chat-card {
       background-color: white !important;
       border: solid 1px #eee;
