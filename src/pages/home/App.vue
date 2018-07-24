@@ -178,7 +178,25 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="credCards" v-else-if="message.currentAction === 'specificForex'">            
+                            <div class="chat-bg">
+                                {{ message.text }}
+                            </div>     
+                            <br>                           
+                            <div class="chat-card-bundle custom-scroll">    
+                                <div class="chat-card" v-for="(card, index) in message.data" :key="index">
+                                    <div class="card-content">
+                                         <span class="style-green">  {{ card.country }}  </span>   --  <span class="style-green">  PHP </span> 
+                                         <br><br> 
+                                         <p class="card-text">
+                                            We buy:
+                                            <span class="style-red">  {{ card.rate }} </span>
+                                        </p>    
+                                 
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="credCards" v-else-if="message.currentAction === 'getDepositReqsList'">  
                            <div class="chat-bg">
                                 {{ message.text }}
@@ -329,11 +347,12 @@ export default {
             },
 
 
-        currentExchange(string){
+        currentExchange(string, country){
             var fx = require('money');
             Api.getJSON(
             'https://openexchangerates.org/api/latest.json?app_id=3f3984e88e63498c8c3ecd5c190a6302').then(data=>{
                 if ( data != null ) {
+                    if(this.action === "getForeignExchange"){
                     let currencies = ["EUR", "USD", "CNY"];
                     let flags = ["https://i.imgur.com/3cx9v2o.png", "https://i.imgur.com/i9k1SyM.png", "https://i.imgur.com/7A4nl53.png"]
                     fx.rates = data.rates;
@@ -344,8 +363,19 @@ export default {
                             'rate' : rate,
                             'imgSrc' : flags[i],
                         });
+                    }}else{
+                        let countryPush = country;
+                        fx.rates = data.rates;
+                        for(var i = 0; i<1; i++){
+                            let rate = fx.convert(1, {from: country, to: "PHP"});
+                            this.forex.push({
+                                'country': countryPush,
+                                'rate': rate,
+                            })
+                        }
                     }
-                this.chat('robot', string, this.forex, this.action);      
+                this.chat('robot', string, this.forex, this.action);  
+                this.forex = [];    
                 } else {
                     // If not, apply to fxSetup global:
                     var fxSetup = {
@@ -370,9 +400,12 @@ export default {
                     this.value = data.entities[0].value;
                     this.getDatabase(this.action);
                 }else if(this.action === 'getForeignExchange'){
-                    this.currentExchange(data.output.text.join('\n'));
+                    this.currentExchange(data.output.text.join('\n'), null);
+                }else if(this.action === 'specificForex'){
+                    this.currentExchange(data.output.text.join('\n'), data.entities["0"].value);
                 }else{
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
+                    console.log(data);
                 }
                 this.message= null;
 
@@ -403,10 +436,8 @@ export default {
                 'address': data.data[i].address,
                 'opening' : data.data[i].opening,
                 'closing' : data.data[i].closing,
-                });}
-                
-            }
-            
+                });}   
+            } 
             this.arrayLength = data.data.length;
             this.action = data.context.action;
             if(this.arrayLength>0){
