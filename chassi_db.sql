@@ -945,6 +945,36 @@ VALUES
 UNLOCK TABLES;
 
 
+
+# Dump of table account
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `account`;
+
+CREATE TABLE `account` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) unsigned NOT NULL,
+  `firstname` varchar(100) DEFAULT NULL,
+  `lastname` varchar(100) DEFAULT NULL,
+  `pin` varchar(100) DEFAULT NULL,
+  `birthday` varchar(100) DEFAULT NULL,
+  `accountno` varchar(100) DEFAULT NULL,
+  `status` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+
+INSERT INTO `account` (`id`, `account_id`, `firstname`, `lastname`, `pin`, `birthday`, `accountno`, `status`)
+VALUES
+	(1, 01, 'Harry', 'Potter', '111111', 'July 31, 1979', '1111 1111 11', 'active'),
+	(2, 02, 'Percy', 'Jackson', '222222', 'August 18, 1993', '2222 2222 22', 'active');
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
 # Dump of Account Reqs
 # ------------------------------------------------------------
 
@@ -952,6 +982,7 @@ DROP TABLE IF EXISTS `accountreqs`;
 
 CREATE TABLE `accountreqs` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) unsigned NOT NULL,
   `definition` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -959,10 +990,10 @@ CREATE TABLE `accountreqs` (
 LOCK TABLES `accountreqs` WRITE;
 /*!40000 ALTER TABLE `accountreqs` DISABLE KEYS */;
 
-INSERT INTO `accountreqs` (`id`, `definition`)
+INSERT INTO `accountreqs` (`id`, `account_id`, `definition`)
 VALUES
-	(1, 'Two (2) 1x1 ID Pictures'),
-	(2, 'Original/s and clear copy/ies of at least one valid ID');	
+	(1, 01, 'Two (2) 1x1 ID Pictures'),
+	(2, 01, 'Original/s and clear copy/ies of at least one valid ID');	
 
 /*!40000 ALTER TABLE `accountreqs` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1017,6 +1048,226 @@ VALUES
 	(5, 'Who is Chassi?');
 
 /*!40000 ALTER TABLE `chassicommands` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+# Dump of table country
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `country`;
+
+CREATE TABLE `country` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(100) DEFAULT NULL,
+  `imgSrc` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `country` WRITE;
+/*!40000 ALTER TABLE `country` DISABLE KEYS */;
+
+INSERT INTO `country` (`id`, `country_name`, `imgSrc`)
+VALUES
+	(1, 'Afghanistan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Afghanistan.png'),
+	(2, 'Albania', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Albania.png'),
+	(3, 'Algeria', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Algeria.png'),
+	(4, 'Andorra', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Andorra.png'),
+	(5, 'Angola', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Angola.png'),
+	(6, 'Antigua', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Antigua.png'),
+	(7, 'Argentina', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Argentina.png'),
+	(8, 'Armenia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Armenia.png'),
+	(9, 'Australia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Australia.png'),
+	(10, 'Austria', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Austria.png'),
+	(11, 'Azerbaijan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Azerbaijan.png'),
+	(12, 'Bahamas', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bahamas.png'),
+	(13, 'Bahrain', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bahrain.png'),
+	(14, 'Bangladesh', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bangladesh.png'),
+	(15, 'Barbados', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Barbados.png'),
+	(16, 'Belarus', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Belarus.png'),
+	(17, 'Belgium', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Belgium.png'),
+	(18, 'Belize', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Belize.png'),
+	(19, 'Benin', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Benin.png'),
+	(20, 'Bhutan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bhutan.png'),
+	(21, 'Bolivia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bolivia.png'),
+	(22, 'Bosnia Herzegovina', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bosnia-Herzegovina.png'),
+	(23, 'Botswana', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Botswana.png'),
+	(24, 'Brazil', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Brazil.png'),
+	(25, 'Brunei', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Brunei.png'),
+	(26, 'Bulgaria', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Bulgaria.png'),
+	(27, 'Burkina Faso', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Burkina-Faso.png'),
+	(28, 'Burundi', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Burundi.png'),
+	(29, 'Cabo Verde', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cabo-Verde.png'),
+	(30, 'Cambodia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cambodia.png'),
+	(31, 'Cameroon', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cameroon.png'),
+	(32, 'Canada', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Canada.png'),
+	(33, 'Central African Republic', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Central-African-Republic.png'),
+	(34, 'Chad', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Chad.png'),
+	(35, 'Chile', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Chile.png'),
+	(36, 'China', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-China.png'),
+	(37, 'Colombia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Colombia.png'),
+	(38, 'Comoros', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Comoros.png'),
+	(39, 'Democratic Republic of Congo', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Congo-Democratic-Republic-of.png'),
+	(40, 'Congo', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Congo.png'),
+	(41, 'Costa Rica', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Costa-Rica.png'),
+	(42, 'Cote d\' Ivoire', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cote-d-Ivoire.png'),
+	(43, 'Croatia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Croatia.png'),
+	(44, 'Cuba', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cuba.png'),
+	(45, 'Cyprus', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Cyprus.png'),
+	(46, 'Czech Republic', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Czech-Republic.png'),
+	(47, 'Denmark', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Denmark.png'),
+	(48, 'Djibouti', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Djibouti.png'),
+	(49, 'Dominica', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Dominica.png'),
+	(50, 'Dominican Republic', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Dominican-Republic.png'),
+	(51, 'Ecuador', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Ecuador.png'),
+	(52, 'Egypt', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Egypt.png'),
+	(53, 'El Salvador', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-El-Salvador.png'),
+	(54, 'Equatorial Guinea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Equatorial-Guinea.png'),
+	(55, 'Eritrea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Eritrea.png'),
+	(56, 'Estonia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Estonia.png'),
+	(57, 'Eswatini', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Eswatini.png'),
+	(58, 'Ethiopia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Ethiopia.png'),
+	(59, 'Fiji', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Fiji.png'),
+	(60, 'Finland', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Finland.png'),
+	(61, 'France', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-France.png'),
+	(62, 'Gabon', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Gabon.png'),
+	(63, 'Gambia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Gambia.png'),
+	(64, 'Georgia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Georgia.png'),
+	(65, 'Germany', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Germany.png'),
+	(66, 'Ghana', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Ghana.png'),
+	(67, 'Greece', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Greece.png'),
+	(68, 'Grenada', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Grenada.png'),
+	(69, 'Guatemala', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Guatemala.png'),
+	(70, 'Guinea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Guinea.png'),
+	(71, 'Guinea Bissau', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Guinea-Bissau.png'),
+	(72, 'Guyana', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Guyana.png'),
+	(73, 'Haiti', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Haiti.png'),
+	(74, 'Honduras', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Honduras.png'),
+	(75, 'Hungary', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Hungary.png'),
+	(76, 'Iceland', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Iceland.png'),
+	(77, 'India', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-India.png'),
+	(78, 'Indonesia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Indonesia.png'),
+	(79, 'Iran', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Iran.png'),
+	(80, 'Iraq', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Iraq.png'),
+	(81, 'Ireland', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Ireland.png'),
+	(82, 'Israel', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Israel.png'),
+	(83, 'Italy', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Italy.png'),
+	(84, 'Jamaica', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Jamaica.png'),
+	(85, 'Japan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Japan.png'),
+	(86, 'Jordan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Jordan.png'),
+	(87, 'Kazakhstan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kazakhstan.png'),
+	(88, 'Kenya', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kenya.png'),
+	(89, 'Kiribati', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kiribati.png'),
+	(90, 'Kosovo', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kosovo.png'),
+	(91, 'Kuwait', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kuwait.png'),
+	(92, 'Kyrgyzstan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Kyrgyzstan.png'),
+	(93, 'Laos', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Laos.png'),
+	(94, 'Latvia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Latvia.png'),
+	(95, 'Lebanon', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Lebanon.png'),
+	(96, 'Lesotho', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Lesotho.png'),
+	(97, 'Liberia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Liberia.png'),
+	(98, 'Libya', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Libya.png'),
+	(99, 'Liechtenstein', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Liechtenstein.png'),
+	(100, 'Lithuania', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Lithuania.png'),
+	(101, 'Luxembourg', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Luxembourg.png'),
+	(102, 'Macedonia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Macedonia.png'),
+	(103, 'Madagascar', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Madagascar.png'),
+	(104, 'Malawi', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Malawi.png'),
+	(105, 'Malaysia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Malaysia.png'),
+	(106, 'Maldives', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Maldives.png'),
+	(107, 'Mali', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mali.png'),
+	(108, 'Malta', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Malta.png'),
+	(109, 'Marshall Islands', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Marshall-Islands.png'),
+	(110, 'Mauritania', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mauritania.png'),
+	(111, 'Mauritius', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mauritius.png'),
+	(112, 'Mexico', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mexico.png'),
+	(113, 'Micronesia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Micronesia.png'),
+	(114, 'Moldova', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Moldova.png'),
+	(115, 'Monaco', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Monaco.png'),
+	(116, 'Mongolia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mongolia.png'),
+	(117, 'Montenegro', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Montenegro.png'),
+	(118, 'Morocco', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Morocco.png'),
+	(119, 'Mozambique', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Mozambique.png'),
+	(120, 'Myanmar', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Myanmar.png'),
+	(121, 'Namibia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Namibia.png'),
+	(122, 'Nauru', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Nauru.png'),
+	(123, 'Nepal', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Nepal.png'),
+	(124, 'Netherlands', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Netherlands.png'),
+	(125, 'New Zealand', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-New-Zealand.png'),
+	(126, 'Nicaragua', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Nicaragua.png'),
+	(127, 'Niger', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Niger.png'),
+	(128, 'Nigeria', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Nigeria.png'),
+	(129, 'North Korea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Korea-North.png'),
+	(130, 'Norway', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Norway.png'),
+	(131, 'Oman', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Oman.png'),
+	(132, 'Pakistan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Pakistan.png'),
+	(133, 'Palau', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Palau.png'),
+	(134, 'Palestine', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Palestine.png'),
+	(135, 'Panama', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Panama.png'),
+	(136, 'Papua New Guinea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Papua-New-Guinea.png'),
+	(137, 'Paraguay', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Paraguay.png'),
+	(138, 'Peru', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Peru.png'),
+	(139, 'Philippines', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Philippines.png'),
+	(140, 'Poland', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Poland.png'),
+	(141, 'Portugal', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Portugal.png'),
+	(142, 'Qatar', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Qatar.png'),
+	(143, 'Romania', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Romania.png'),
+	(144, 'Russia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Russia.png'),
+	(145, 'Rwanda', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Rwanda.png'),
+	(146, 'St Kitts Nevis', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Kitts-Nevis.png'),
+	(147, 'St Lucia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Lucia.png'),
+	(148, 'St Vincent the Grenadines', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Vincent-the-Grenadines.png'),
+	(149, 'Samoa', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Samoa.png'),
+	(150, 'San Marino', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-San-Marino.png'),
+	(151, 'Sao Tome and Principe', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Sao-Tome-and-Principe.png'),
+	(152, 'Saudi Arabia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Saudi-Arabia.png'),
+	(153, 'Senegal', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Senegal.png'),
+	(154, 'Serbia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Serbia.png'),
+	(155, 'Seychelles', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Seychelles.png'),
+	(156, 'Sierra Leone', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Sierra-Leone.png'),
+	(157, 'Singapore', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Singapore.png'),
+	(158, 'Slovakia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Slovakia.png'),
+	(159, 'Slovenia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Slovenia.png'),
+	(160, 'Solomon Islands', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Solomon-Islands.png'),
+	(161, 'Somalia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Somalia.png'),
+	(162, 'South Africa', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-South-Africa.png'),
+	(163, 'South Korea', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Korea-South.png'),
+	(164, 'South Sudan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-South-Sudan.png'),
+	(165, 'Spain', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Spain.png'),
+	(166, 'Sri Lanka', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Sri-Lanka.png'),
+	(167, 'Sudan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Sudan.png'),
+	(168, 'Suriname', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Suriname.png'),
+	(169, 'Sweden', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Sweden.png'),
+	(170, 'Switzerland', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Switzerland.png'),
+	(171, 'Syria', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Syria.png'),
+	(172, 'Taiwan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Taiwan.png'),
+	(173, 'Tajikistan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Tajikistan.png'),
+	(174, 'Tanzania', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Tanzania.png'),
+	(175, 'Thailand', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Thailand.png'),
+	(176, 'Timor-Leste', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Timor-Leste.png'),
+	(177, 'Togo', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Togo.png'),
+	(178, 'Tonga', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Tonga.png'),
+	(179, 'Trinidad and Tobago', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Trinidad-and-Tobago.png'),
+	(180, 'Tunisia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Tunisia.png'),
+	(181, 'Turkey', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Turkey.png'),
+	(182, 'Turkmenistan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Turkmenistan.png'),
+	(183, 'Tuvalu', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Tuvalu.png'),
+	(184, 'Uganda', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Uganda.png'),
+	(185, 'Ukraine', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Ukraine.png'),
+	(186, 'United Arab Emirates', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Arab-Emirates.png'),
+	(187, 'United Kingdom', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Kingdom.png'),
+	(188, 'United States of America', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-United-States-of-America.png'),
+	(189, 'Uruguay', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Uruguay.png'),
+	(190, 'Uzbekistan', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Uzbekistan.png'),
+	(191, 'Vanuatu', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Vanuatu.png'),
+	(192, 'Vatican City', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Vatican-City.png'),
+	(193, 'Venezuela', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Venezuela.png'),
+	(194, 'Vietnam', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Vietnam.png'),
+	(195, 'Yemen', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Yemen.png'),
+	(196, 'Zambia', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Zambia.png'),
+	(197, 'Zimbabwe', 'https://www.countries-ofthe-world.com/flags-normal/flag-of-Zimbabwe.png');
+
+/*!40000 ALTER TABLE `country` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
