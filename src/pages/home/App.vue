@@ -149,7 +149,7 @@
                                          <span class="style-green">  {{ card.name }} </span> 
                                          <br><br> 
                                          <p class="card-text">
-                                         
+                
                                             {{ card.definition }}
                                         </p>    
                                  
@@ -158,7 +158,7 @@
                             </div>
                         </div>
 
-                        <div class="credCards" v-else-if="message.currentAction === 'getForeignExchange'">            
+                        <div class="credCards" v-else-if="message.currentAction === 'getForeignExchange' || message.currentAction === 'specificForex'">            
                             <div class="chat-bg">
                                 {{ message.text }}
                             </div>     
@@ -166,7 +166,8 @@
                             <div class="chat-card-bundle custom-scroll">    
                                 <div class="chat-card" v-for="(card, index) in message.data" :key="index">
                                     <div class="card-content">
-                                          <img id="credCard" v-bind:src="`${card.imgSrc}`"><br><br>
+                                          <img id="credCard" v-bind:src="`${card.imgSrc}`">
+                                        <br><br>
                                          <span class="style-green">  {{ card.country }}  </span>   --  <span class="style-green">  PHP </span> 
                                          <br><br> 
                                          <p class="card-text">
@@ -178,25 +179,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="credCards" v-else-if="message.currentAction === 'specificForex'">            
-                            <div class="chat-bg">
-                                {{ message.text }}
-                            </div>     
-                            <br>                           
-                            <div class="chat-card-bundle custom-scroll">    
-                                <div class="chat-card" v-for="(card, index) in message.data" :key="index">
-                                    <div class="card-content">
-                                         <span class="style-green">  {{ card.country }}  </span>   --  <span class="style-green">  PHP </span> 
-                                         <br><br> 
-                                         <p class="card-text">
-                                            We buy:
-                                            <span class="style-red">  {{ card.rate }} </span>
-                                        </p>    
-                                 
-                                 </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="credCards" v-else-if="message.currentAction === 'getDepositReqsList'">  
                            <div class="chat-bg">
                                 {{ message.text }}
@@ -362,27 +345,36 @@ export default {
                             'country' : currencies[i],
                             'rate' : rate,
                             'imgSrc' : flags[i],
-                        });
-                    }}else{
-                        let countryPush = country;
+                        }); 
+                    }
+                    this.chat('robot', string, this.forex, this.action); 
+                    this.forex = []; 
+                    }else{
+                        context.action = this.action;
+                        context.country = country;
+                        let options = {
+                            context: context || {},
+                            input:{
+                                text: country,
+                            }
+                        };
                         fx.rates = data.rates;
-                        for(var i = 0; i<1; i++){
+                        Api.post('/', options).then(data=>{
+                        let countryPush = country;
+                        for(var i = 0; i < 1; i++){
                             let rate = fx.convert(1, {from: country, to: "PHP"});
                             this.forex.push({
                                 'country': countryPush,
                                 'rate': rate,
-                            })
+                                'imgSrc': data.data[i].imgSrc,
+                            });
+                            this.chat('robot', string, this.forex, this.action); 
+                            this.forex = [];   
                         }
-                    }
-                this.chat('robot', string, this.forex, this.action);  
-                this.forex = [];    
-                } else {
-                    // If not, apply to fxSetup global:
-                    var fxSetup = {
-                        rates : data.rates,
-                        base : data.base
-                    }
-                }
+                     }).catch(error=>{
+                        console.log(error);
+                        this.message= null;
+                    });}}
             });            
         },
         userInput() {
@@ -392,7 +384,6 @@ export default {
                 input: {
                     text: this.message || ""}
             }).then(data=>{
-                console.log(data);
                 context = data.context;
                 this.action = data.context.action;
                 if(this.action === 'getCardReqs' || this.action === 'getCreditCardTypes' || this.action === 'getDepositReqsList' || this.action === 'getChassiCommands' || this.action === 'getLoanDetails'){this.getDatabase(this.action);}
@@ -405,7 +396,6 @@ export default {
                     this.currentExchange(data.output.text.join('\n'), data.entities["0"].value);
                 }else{
                     this.checkIntent(data.output.text.join('\n'), null, this.action);
-                    console.log(data);
                 }
                 this.message= null;
 
@@ -510,7 +500,6 @@ export default {
                 'data' : array,
                 'currentAction' : contextAction,
             })   
-            console.log(sender, message, array, contextAction);
             var element = document.getElementById("msgBox");
             element.scrollTop = element.scrollHeight + 10;
         },
@@ -537,7 +526,6 @@ export default {
         inputYes() {
             this.message="Use my current location"
             this.geoLocation();
-            console.log("efa");
         },
         inputNo() {
             this.message= place;
